@@ -1,7 +1,9 @@
 # myStudyRepo
 ## 개요
-학습용 샘플 프로젝트와 직접 작성하는 학습용 문서를 모아놓는 저장소
+직접 작성하는 학습용 문서를 모아놓는 저장소
 이 중에서 괜찮은(?) 문서들은 좀 더 다듬어서 [개인블로그](http://syung1104.blog.me)에 업로드 합니다.
+
+학습중에 작성한 코드나 샘플용 프로젝트는 [sample-projects 브랜치](https://github.com/yenarue/myStudyRepo/tree/sample-projects)에 업로드 합니다.
 
 ## 목표
 * 깔끔하게 정리된 글로 남기는 습관을 기르자.

@@ -1,8 +1,8 @@
 # Android
 
 ## 개요
-Android Application 개발 관련 내용 문서와 프로젝트를 업로드합니다.
-프로젝트는 코드랩이나 실험용 샘플을 업로드합니다.
+Android Application 개발 관련 내용 문서를 업로드합니다.
+* [샘플 프로젝트 브랜치](https://github.com/yenarue/myStudyRepo/tree/sample-projects/Android)
 
 ## 현황
 * 2011년에 Android Application 첫 개발을 시작한 이후로 꾸준히 개발하고 있습니다.
