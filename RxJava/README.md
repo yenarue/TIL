@@ -1,8 +1,7 @@
 # RxJava
 ## 개요
-RxJava를 개인적으로 학습하는 공간입니다.
-* 문서나 샘플 프로젝트 위주로 구성되어 있습니다.
-* 문서는 Markdown 문법으로 쓰여집니다.
+RxJava를 개인적으로 학습한 내용을 문서로 작성하여 업로드하는 공간입니다.
+* [샘플 프로젝트 브랜치](https://github.com/yenarue/myStudyRepo/tree/sample-projects/RxJava)
 
 ## 목차
 * [RxJava Essential](https://github.com/yenarue/myStudyRepo/tree/master/RxJava/rxjava-essentials-master)
