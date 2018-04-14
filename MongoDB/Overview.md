@@ -185,6 +185,14 @@ mongod 서버의 클론. mongod의 모든 command를 사용할 수 있으면서�
 
 # 그 외
 ## GeoSpatial
+`geoNear()`으로 지리공간 관련한 연산들을 쉽게 할 수 있다.
+* [`geoNear`에 대한 공식 문서](https://docs.mongodb.com/manual/reference/command/geoNear/)
+* [`aggregate`의 `geoNear`연산](https://docs.mongodb.com/manual/reference/operator/aggregation/geoNear/)
+
+```javascript
+db.runCommand({geoNeaer : 'cities', near : [45.52, -122.67], num : 5, maxDistance : 1})
+```
+
 ## GridFS
 
 # 마무리
