@@ -117,8 +117,8 @@ db.eval('getLast(db.phones)')
 * 개념을 잘 설명한 동영상 : https://www.youtube.com/watch?v=gI4HN0JhPmo
 * 전형적인 분할 정복
 
-# Sharding - 하나의 컬렉션을 여러개로 분할
-컬렉션의 모든 값을 하나의 서버가 갖는 것이 아니고 값의 범위에 따라 다른 서버들로 분할 하는 것.
+# Sharding - 수평적인 스케일링
+**하나의 컬렉션을 여러개로 분할**한다. 컬렉션의 모든 값을 하나의 서버가 갖는 것이 아니고 값의 범위에 따라 다른 서버들로 분할 하는 것.
 
 ## 예
 숫자 컬렉션의 0~100까지는 서버A에, 101~200까지는 서버 B에
@@ -134,6 +134,9 @@ $ mongod --shardsvr --dbpath ./mongo5 --port 27015
 ```
 
 ### 구성 서버 만들기 (Config Server) : `--configsvr`
+어떤 방식으로 샤딩을 할 지 적어두는 서버. 어떤 서버가 무슨 값을 가지고 있는지 유지하고 관리한다.
+
+ex. mongo4 : A~N, mongo5 : O~Z
 ```bash
 $ mkdir ./mongoconfig
 $ mongod --configsvr --dbpath ./mongoconfig --port 27016
@@ -161,7 +164,7 @@ mongod 서버의 클론. mongod의 모든 command를 사용할 수 있으면서�
 ## 문제점
 컬렉션의 한 부분이 유실되면 전체가 위태로워질 수 있다. => ReplicaSet으로 해결
 
-# ReplicaSet - 데이터를 다른 서버에 복사
+# ReplicaSet - 데이터의 지속성 향상시키기
 하나의 인스턴스만 실행되는 경우는 거의 없다. 여러 서버에 걸쳐 실행되면서 저장된 데이터를 복제한다.
 
 * Primary : Master Server. READ/WRITE
@@ -169,7 +172,7 @@ mongod 서버의 클론. mongod의 모든 command를 사용할 수 있으면서�
 
 마스터 노드에 장애가 생기면, 가장 최신의 데이터를 갖는 것이 새로운 마스터로 선출된다.
 
-* 대부분의 노드에 마스터의 데이터가 복사되어야 하지만 실제 데이터로 인지한다.
+* **대부분의 노드에 마스터의 데이터가 복사되어야만 실제 데이터로 인지한다.**
     * 다른 노드에 복사되지 않고 마스터 노드에만 데이터가 존재하는 경우, 해당 오퍼레이션은 제외되어 버린다. 
     * 위와 같은 이유로 과반수가 성립될 수 있도록 ReplicaSet의 개수는 언제나 홀수로 유지되어야 한다. (3, 5 ...) 그렇지 않으면 에러가 나며 정상적으로 동작하지 않는다. (MongoDB의 철학)
 
@@ -182,6 +185,9 @@ mongod 서버의 클론. mongod의 모든 command를 사용할 수 있으면서�
 이러한 MongoDB의 특성은 Sharding과 ReplicaSet이 있었기 때문에 가능했던 것이다.
 
 
+# Sharding과 ReplicaSet이 헷깔린다면?
+* [[YouTube] Introduction to Sharding](https://www.youtube.com/watch?v=4upppuW7lGE)
+* [[YouTube] Sharding + Replication](https://www.youtube.com/watch?v=1dZK4vP_5ng)
 
 # 그 외
 ## GeoSpatial
@@ -194,10 +200,38 @@ db.runCommand({geoNeaer : 'cities', near : [45.52, -122.67], num : 5, maxDistanc
 ```
 
 ## GridFS
+MongoDB의 분산 파일 시스템
+
+```bash
+$ mongofiles -h localhost:27020 list
+connected to: localhost:27020
+
+## 파일 업로드
+$ mongofiles -h localhost:27020 put testfile.txt
+
+$ mongofiles -h localhost:27020 list
+connected to: localhost:27020
+testfile.txt 1024
+
+# 업로드한 파일도 컬렉션으로 지정된다 -> 쿼리로 조회 가능
+$ show collections
+fs.chunks
+fs.files
+system.indexes
+```
 
 # 마무리
 ## 장점
+* 데이터 복제 & 수평적인 스케일링 => **거대한 양의 데이터와 요청을 처리하는 능력!**
+* 강제화/고정 되어있지 않은 스키마 & 중첩 다큐먼트 => **유연한 데이터 모델**
+* RDBMS의 SQL와 유사한 쿼리들 => **사용하기 쉽다. 기존 RDB사용자들이 넘어오기 쉽다.**
+
 ## 단점
+* 강제화/고정 되어있지 않은 스키마 => **제약조건이 없어서 불안해!**
+    * 어떤 값이든 추가될 수 있기 때문에 휴먼에러가 발생한 경우 골치아파진다. 
+        * 이 부분이 걱정이라면 다양한 라이브러리로 어느정도는 예방됨. (`mongoose`)
+    * 사실 RDB도 데이터 모델이 이미 잘 만들어져있다면 유연성은 크게 중요하지 않다.
+* 대형의 클러스터에서 가장 잘 동작하는 점 => **클러스터의 사전 설계/관리/운영이 어렵다.**
 
 # 참고자료
 * [[Book] 만들면서 파악하는 NoSQL 7 데이터베이스 (원제 : Seven Databases In Seven Weeks)](http://www.aladin.co.kr/shop/wproduct.aspx?ItemId=24714891)
