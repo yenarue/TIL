@@ -71,4 +71,14 @@ NTFS partition /dev/sdb2 was processed successfully.
 위와같이 나타나면 성공이다 :-)
 윈도우즈로 부팅해서 해당 하드를 사용하게되면 윈도우즈 파일시스템으로 변경되므로 번거롭지만 리눅스로 전환할 때 마다 계속 해줘야하는 작업이다ㅠㅠ
 
+------------
 
+## ntfs로 설정하였는데도 마운트가 제대로 되지 않는 경우
+### 에러메세지
+Error mounting /dev/sdb3 at /media/yenarue/HDD_Ubuntu: Command-line `mount -t "ext4" -o "uhelper=udisks2,nodev,nosuid" "/dev/sdb3" "/media/yenarue/HDD_Ubuntu"' **exited with non-zero exit status 32**: mount: mount /dev/sdb3 on /media/yenarue/HDD_Ubuntu failed: **Structure needs cleaning**
+ (udisks-error-quark, 0)
+
+### 해결방법
+```bash
+$ sudo fsck.ext4 /dev/sdb3
+```
