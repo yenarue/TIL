@@ -36,5 +36,50 @@ Python 으로 구현된 오픈소스 IT 자동화 도구.
 * 실행 호스트 : Windows 환경 지원 X, Python 2.6 이상 (Python3은 지원 X)
 * 대상 호스트 : SSH로 접속가능한 모든 OS 지원, Python 2.4 이상 (Python3은 지원 X)
 
+# Ansible 사용해보기
+## 사전 준비
+### VirtualBox & Vagrant 설치
+1. [Virtual Box](https://www.virtualbox.org/wiki/Linux_Downloads)
+1. [Vagrant 설치](https://www.vagrantup.com/downloads.html)
+
+### Ansible 설치
+```bash
+$ sudo apt-get update
+$ sudo apt-get install software-properties-common
+
+$ sudo apt-add-repository ppa:ansible/ansible
+
+$ sudo apt-get update
+$ sudo apt-get install ansible
+```
+
+### Vagrant 로 가상서버 구축
+1. `Vagrantfile` 생성
+```ruby
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+    config.ssh.insert_key = false
+    config.vm.box = "bento/centos-7.1"
+    config.vm.hostname = "yenarue-devops-ansible.dev"
+    config.vm.network "private_network", ip: "192.168.34.21"
+end
+```
+2. vagrant 업로드 후 ssh 접속
+```bash
+$ vagrant up
+$ vagrant ssh
+Last login: Sun Apr 15 15:59:45 2018 from 10.0.2.2
+[vagrant@yenarue-devops-ansible ~]$
+```
+
+## `ansible.cfg`
+ansible 실행시 참조되는 컨피그 파일은 다음과 같은 우선순위로 참조된다.
+1. 환경변수 `ANSIBLE_CONFIG`에 지정된 경로
+2. `.ansible.cfg`
+3. `~/.ansible.cfg`
+4. `/etc/ansible/ansible.cfg`
+
 # 관련자료
 * [Naver D2 김용환 님의 'Ansible의 이해와 활용' 발표자료](https://www.slideshare.net/deview/1a7ansible)
