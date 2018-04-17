@@ -50,7 +50,79 @@ Image System 통일. 배포. => 컨테이너를 쉽게 쓸 수 있도록 해줌
     * Private Docker Registry : SaaS, Enterprise... (AWS, IBM Bluemix, MS Azure 등... 아무데나)
 * Docker Engine : Container를 관리하는 Docker 프로세스.
 
-# Kubernetes
+## 실제로 사용해보자
+* [튜토리얼1](http://docker-dwmeetup.mybluemix.net/docker1.html)
+
+### Image 빌드하기
+```bash
+$ docker image build -t hello-world:3 .
+
+$ docker images
+REPOSITORY                                             TAG                 IMAGE ID            CREATED             SIZE
+hello-world                                            3                   983614308d13        37 seconds ago      74.1MB
+```
+
+### Image Deploy 전 변경하기
+```bash
+$ kubectl edit deployment hello-world-deployment
+## yml
+#  spec:
+#      containers:
+#      - image: registry.au-syd.bluemix.net/yenarue/hello-world:3
+##
+deployment.extensions "hello-world-deployment" edited
+```
+
+### Image Push
+```bash
+$ docker image tag hello-world:3 
+registry.au-syd.bluemix.net/$MY_NAMESPACE/hello-world:1
+$ docker image push registry.au-syd.bluemix.net/$MY_NAMESPACE/hello-world:3
+The push refers to repository [registry.au-syd.bluemix.net/$MY_NAMESPACE/hello-world]
+14d780d043d8: Pushed 
+68128e2e7bd2: Pushed 
+7e33cf1c23d7: Pushed 
+0804854a4553: Layer already exists 
+6bd4a62f5178: Layer already exists 
+9dfa40a0da3b: Layer already exists 
+3: digest: sha256:a50f53150b57598ea0b53afcba9e4564a2e9e1d3d5e6403a7adb3e269cef6959 size: 1576
+```
+
+### Image Deploy
+* 쿠베네티스 디플로이 참고
+
+### 싹 다 지워버리기
+```bash
+$ sudo docker container rm $(docker container ls -a -q)
+$ sudo docker image ls -q | sudo xargs docker image rm
+Untagged: hello-world:latest
+Untagged: hello-world@sha256:f5233545e43561214ca4891fd1157e1c3c563316ed8e237750d59bde73361e77
+Deleted: sha256:e38bc07ac18ee64e6d59cf2eafcdddf9cec2364dfe129fe0af75f1b0194e0c96
+Deleted: sha256:2b8cbd0846c5aeaa7265323e7cf085779eaf244ccbdd982c4931aef9be0d2faf
+Untagged: alpine:latest
+Untagged: alpine@sha256:7df6db5aa61ae9480f52f0b3a06a140ab98d427f86d8d5de0bedab9b8df6b1c0
+Deleted: sha256:3fd9065eaf02feaf94d68376da52541925650b81698c53c6824d92ff63f98353
+Deleted: sha256:cd7100a72410606589a54b932cabd804a17f9ae5b42a1882bd56d263e02b6215
+```
+### Host 내부 바인딩 가능
+
+```bash
+# mynginx3에 Host의 /home/ibmcloud/workspace:/usr/share/nginx/html 하위경로를 바인딩하도록 설정.
+$ sudo docker container run -d --name mynginx3 -p 8083:80 -v /home/ibmcloud/workspace:/usr/share/nginx/html nginx:alpine
+
+# Host 파일 수정
+$ cd ~/workspace
+~/workspace$ echo "hello??" > index.html 
+~/workspace$ cat index.html
+hello??
+
+# 브라우저에서 ip:8083 접속시 "hello??"으로 나타나는 것 확인 가능
+$ curl http://169.56.107.244:8083/
+hello??
+```
+
+
+# [Kubernetes](https://kubernetes.io/)
 Docker 클러스터를 관리하는 컨테이너 오케스트레이션 플랫폼.
 * 컨테이너를 실행하고 관리함
 * 이식성이 뛰어나다. (다양한 클라우드, 환경 지원)
@@ -63,3 +135,87 @@ Docker 클러스터를 관리하는 컨테이너 오케스트레이션 플랫폼
 
 ## 구조
 [Kubernetes Master] ------ [Worker Nodes]
+
+## 사용해보기
+* [튜토리얼](http://docker-dwmeetup.mybluemix.net/k8s1.html)
+* [깃헙](https://github.com/IBM/container-service-getting-started-wt)
+* [Kubernetes를 AWS EC2에 올리기](https://kubernetes.io/docs/getting-started-guides/aws/)
+
+### 설치
+```bash
+$ sudo apt update && sudo apt install -y apt-transport-https
+$ curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+$ echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" |sudo tee /etc/apt/sources.list.d/kubernetes.list
+$ sudo apt update
+$ sudo apt install -y kubectl
+```
+### 쿠버네티스 옵션 자동완성
+```bash
+$ source <(kubectl completion bash)
+$ kubectl completion bash |sudo tee /etc/bash_completion.d/kubect
+```
+
+### deployment
+```bash
+$ kubectl describe service hello-world-service-real
+Name:                     hello-world-service-real
+Namespace:                default
+Labels:                   run=hello-world-deployment
+Annotations:              <none>
+Selector:                 run=hello-world-deployment
+Type:                     NodePort
+IP:                       172.21.147.207
+Port:                     <unset>  8080/TCP
+TargetPort:               8080/TCP
+NodePort:                 <unset>  32715/TCP
+Endpoints:                172.30.224.73:8080
+Session Affinity:         None
+External Traffic Policy:  Cluster
+Events:                   <none>
+$ bx cs workers mycluster20180417
+OK
+ID                                                 Public IP       Private IP      Machine Type   State    Status   Zone    Version   
+kube-mel01-pa851b24b8665d4541b0d0e8e71d11642a-w1   168.1.140.136   10.118.180.82   free           normal   Ready    mel01   1.8.8_1508   
+$ curl http://168.1.140.136:32715
+Hello world from hello-world-deployment-5958d5f944-7rfmm! Your app is up and running in a cluster!
+```
+
+### Scale UP
+* [[Tutorial] Scale and update apps -- services, replica sets, and health checks](https://github.com/IBM/container-service-getting-started-wt/tree/master/Lab%202)
+#### yml수정
+```bash
+$ kubectl edit deployment hello-world-deployment
+spec:
+  replicas: 5
+
+## 확인해보기
+$ kubectl get pod
+NAME                                      READY     STATUS              RESTARTS   AGE
+hello-world-deployment-5958d5f944-5tqm5   0/1       ContainerCreating   0          17s
+hello-world-deployment-5958d5f944-65vzx   0/1       ContainerCreating   0          17s
+hello-world-deployment-5958d5f944-6h6mw   1/1       Running             0          4m
+hello-world-deployment-5958d5f944-7rfmm   1/1       Running             0          21m
+hello-world-deployment-5958d5f944-d8cjn   0/1       ContainerCreating   0          17s
+```
+
+#### command 사용
+```bash
+$ kubectl scale --replicas=5 deployment hello-world-deployment
+deployment.extensions "hello-world-deployment" scaled
+
+## 확인해보기
+$ kubectl get pod
+NAME                                      READY     STATUS              RESTARTS   AGE
+hello-world-deployment-5958d5f944-6h6mw   1/1       Running             0          6s
+hello-world-deployment-5958d5f944-7rfmm   1/1       Running             0          17m
+hello-world-deployment-5958d5f944-ffmpn   0/1       ContainerCreating   0          6s
+hello-world-deployment-5958d5f944-mkjs4   0/1       ContainerCreating   0          6s
+hello-world-deployment-5958d5f944-tb6kt   1/1       Running             0          6s
+```
+
+### RollBck
+```bash
+# Undo 가능. 이전 버전으로 돌아감.
+$ kubectl rollout undo deployment hello-world-deployment
+deployment.apps "hello-world-deployment"
+```
