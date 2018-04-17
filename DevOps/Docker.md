@@ -13,12 +13,12 @@ Docker
 ## Container vs VM
 Container는 가상화가 아니다!
 
-- | Container | VM
------- | ------ | ------
-비교 | ![](https://www.docker.com/sites/default/files/Container%402x.png) | ![](https://www.docker.com/sites/default/files/VM%402x.png)
-특징 | 가상화X. Infrastructure위에 그냥 HostOS가 깔리고 그 위 Docker 엔진이 각각의 컨테이너를 **격리**만시킨다. | Infrastructure (물리서버) - Hypervisor (VMware) - 이 위에 아예 OS가 올라간다.
-비교 |격리된 파일시스템/네트워크/프로세스 관리. **커널을 공유하기 때문에 꼭 필요한 라이브러리/바이너리만 배포함으로서 용량이 크게 감소한다.** | OS 자체를 포함하다보니 이미지 용량이 너무 크다. 새로운 이미지를 만들때 시간이 너무 오래걸린다.
-결론 | 컨테이터 배포/운영하는 과정에서 부담이 줄어든다. 좀 더 클라우드 환경에 적합해짐 | 스케일업 할 때 힘들다. 마이크로서비스/클라우드 환경에서는 가상머신이 한계가 있다.
+| - | Container | VM |
+| ------ | ------ | ------ |
+| 비교 | ![](https://www.docker.com/sites/default/files/Container%402x.png) | ![](https://www.docker.com/sites/default/files/VM%402x.png) |
+| 특징 | 가상화X. Infrastructure위에 그냥 HostOS가 깔리고 그 위 Docker 엔진이 각각의 컨테이너를 **격리**만시킨다. | Infrastructure (물리서버) - Hypervisor (VMware) - 이 위에 아예 OS가 올라간다. |
+| 비교 |격리된 파일시스템/네트워크/프로세스 관리. **커널을 공유하기 때문에 꼭 필요한 라이브러리/바이너리만 배포함으로서 용량이 크게 감소한다.** | OS 자체를 포함하다보니 이미지 용량이 너무 크다. 새로운 이미지를 만들때 시간이 너무 오래걸린다. |
+| 결론 | 컨테이터 배포/운영하는 과정에서 부담이 줄어든다. 좀 더 클라우드 환경에 적합해짐 | 스케일업 할 때 힘들다. 마이크로서비스/클라우드 환경에서는 가상머신이 한계가 있다. |
 
 
 즉, Container와 VM은 전혀 다른 개념. 아래와 같이 함께 쓸 수도 있다.
