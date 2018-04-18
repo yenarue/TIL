@@ -81,5 +81,8 @@ ansible 실행시 참조되는 컨피그 파일은 다음과 같은 우선순위
 3. `~/.ansible.cfg`
 4. `/etc/ansible/ansible.cfg`
 
+## 인벤토리
+태스크를 실행할 대상 호스트의 정보를 기술하는 텍스트 파일.
+
 # 관련자료
 * [Naver D2 김용환 님의 'Ansible의 이해와 활용' 발표자료](https://www.slideshare.net/deview/1a7ansible)
