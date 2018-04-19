@@ -37,6 +37,8 @@ Python 으로 구현된 오픈소스 IT 자동화 도구.
 * 대상 호스트 : SSH로 접속가능한 모든 OS 지원, Python 2.4 이상 (Python3은 지원 X)
 
 # Ansible 사용해보기
+* https://github.com/shin1x1/gihyo-devops-ansible
+
 ## 사전 준비
 ### VirtualBox & Vagrant 설치
 1. [Virtual Box](https://www.virtualbox.org/wiki/Linux_Downloads)
@@ -83,6 +85,11 @@ ansible 실행시 참조되는 컨피그 파일은 다음과 같은 우선순위
 
 ## 인벤토리
 태스크를 실행할 대상 호스트의 정보를 기술하는 텍스트 파일.
+
+```bash
+# inventoryfile
+192.168.34.21 ansible_ssh_user=vagrant ansible_ssh_private_key_file=~/.vagrant.d/insecure_private_key
+```
 
 # 관련자료
 * [Naver D2 김용환 님의 'Ansible의 이해와 활용' 발표자료](https://www.slideshare.net/deview/1a7ansible)
