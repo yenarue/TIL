@@ -69,6 +69,9 @@ MongoDB의 유용한 내장 기능 중 하나. 쿼리의 성능을 높혀준다.
 * 시스템이 덜 바쁠 때, 백그라운드 작업으로 생성하자.
 * 자동 생성보다는 수동 생성이 낫다.
 
+## 참고자료
+* [VELOPERT.LOG - [MongoDB] 강좌 6편 Index 설정](https://velopert.com/560)
+
 # 그룹화
 ## 집계 쿼리
 count(), distinct, group 등...
