@@ -260,6 +260,8 @@ $ ansible all -i hosts -b -m yum -a "name=openssl state=latest"
 ```
 
 # Ansible Playbook
+대상 호스트에서 실행할 태스크를 기술한 파일.
+
 
 # 관련자료
 * [Naver D2 김용환 님의 'Ansible의 이해와 활용' 발표자료](https://www.slideshare.net/deview/1a7ansible)
