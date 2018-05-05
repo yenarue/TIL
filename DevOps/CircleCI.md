@@ -29,4 +29,5 @@ Jenkins, Travis CI 등과 같이, 지속적인 통합과 배포를 위한 도구
 
 * CircleCI는 클라우드 기반의 시스템으로서 전용 서버를 설정할 필요가 없습니다. 추가 DevOps 요구사항이 없다는 뜻입니다.
 * 무료입니다. 심지어 Business Account도요. 한달에 약 1500 분의 빌드 시간을 무료로 사용할 수 있습니다.
-* Rest API : 너는 프로젝트, 빌드, Artifact에 대한 접근성을 가지고있다. 빌드의 결과물은 artifact가 된다. artifact는 Application이나 실행파일(예를들면 안드로이드 APK)이나 메타데이터()로 컴파일 될 수 있다. 
+* Rest API : 프로젝트, 빌드, Artifact에 대한 접근성을 가지고 있습니다. 빌드의 결과물은 artifact가 됩니다. artifact는 Application이나 실행파일(예를 들면, 안드로이드 APK)이나 메타데이터(예를 들면, 테스트가 성공했다는 정보)로 컴파일 될 수 있습니다.. 
+* Circle CI는 요구사항 설치를 캐싱합니다. 필요한 환경을 지속적으로(변함없이? 불변적으로?) 설치(Constant Installation)하는 대신 초기에 모든 써드파티 디펜던시들을 체크합니다.
