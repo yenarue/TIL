@@ -260,7 +260,127 @@ $ ansible all -i hosts -b -m yum -a "name=openssl state=latest"
 ```
 
 # Ansible Playbook
-대상 호스트에서 실행할 태스크를 기술한 파일.
+대상 호스트에서 실행할 태스크를 기술한 YAML 파일.
+* 하나의 모듈 실행 : `ansible` 실행
+* 복수개의 모듈 실행 : `ansible-playbook` 실행
+
+## Playbook 작성 규칙 (구문 문법)
+```yaml
+--- # 헤더
+- hosts: vm1 # = hosts: "vm1"
+
+# 리스트
+- value1
+- value2
+[value1, value2] # 한 행에 전부 적을 때
+
+# 딕셔너리
+key1: value1
+key2: value2
+key3: a b c
+
+{ key1: value1, key2: value2, key3: a b c }
+
+# 논리값
+## 참 : true, on, yes
+## 거짓 : false, off, no
+become: true
+become: off
+
+# 들여쓰기
+## 딕셔너리, 리스트에서 들여쓰기를 하면 중첩됨
+### 1) 리스트
+- level-1
+    - level-1-1
+    - level-1-2
+        - level-1-2-1
+### JSON으로 나타내면....
+### ["level-1", ["level-1-1", "level-1-2", ["level-1-2-1"]]]
+### 2) 딕셔너리
+level1:
+    level1-1: value1
+    level1-2: value2
+### JSON으로 나타내면....
+### ["level1", ["level1-1" : "value1", "level1-2" : "value2"]]
+
+```
+
+## Playbook의 구조
+### host
+inventory에 포함된 호스트를 지정한다.
+특정 호스트나 호스트 그룹을 지정할 수 있다.
+
+### tasks
+실행할 태스크를 지정한다. 각 태스크는 딕셔너리로 기술된다.
+
+```yaml
+tasks:
+    - name: Apache 설치
+      yum: name="httpd" state="latest"
+
+## 위와 같음
+tasks:
+    - name: Apache 설치
+      yum:
+        name: httpd
+        state: latest
+
+tasks:
+    - name: Apache 설치
+      yum:
+        name=httpd
+        state=latest
+```
+
+### handlers
+task 실행 후 실행할 핸들러를 지정한다. status가 변경되면 (=처리 결과가 changed면) task의 notify에 지정된 핸들러가 실행된다. 동일한 핸들러가 여러 태스크에서 호출되더라도 단 한번만 실행된다.
+
+```yaml
+tasks:
+    - name: 설정 파일 전송
+      copy: src="files/httpd.conf" dest="/etc/httpd/conf/httpd.conf"
+      notify: httpd 재실행
+handelrs:
+    - name: httpd 재실행
+      services: name="httpd" state="restarted"
+```
+
+### 변수
+
+
+## Ansible Playbook 사용해보기
+### Apache 설치 및 실행해보기
+```yaml
+# playbook-install-apache.yml
+---
+- hosts: vm1 # 192.168.34.21 (inventoryfile-alias에서 정의)
+  become: true
+  tasks:
+    - name: Apache 설치
+      yum: name=httpd state=latest
+
+    - name: Apache 실행
+      service: name=httpd state=started enabled=yes
+```
+
+```bash
+$ ansible-playbook -i inventoryfile-alias playbook-install-apache.yml 
+PLAY [vm1] *****************************************************************************************************************************
+
+TASK [Gathering Facts] *****************************************************************************************************************
+ok: [vm1]
+
+TASK [Apache 설치] ***********************************************************************************************************************
+changed: [vm1]
+
+TASK [Apache 실행] ***********************************************************************************************************************
+changed: [vm1]
+
+PLAY RECAP *****************************************************************************************************************************
+vm1                        : ok=3    changed=2    unreachable=0    failed=0  
+```
+vm1(192.168.34.21)에 80포트로 접속해보면 Apache가 정상적으로 설치 및 실행되었음을 알 수 있다.
+![](./images/ansible-playbook-install-apache-result.png)
 
 
 # 관련자료
