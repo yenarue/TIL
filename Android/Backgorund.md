@@ -93,7 +93,7 @@ JobInfo jobInfo = new JobInfo.Builder(CollectUsageDataJobService.PERIODIC_JOB_ID
 ```
 
 ### 조건 미충족+타임오버시 제대로 실행되는애는...
-interval+deadline만 정상적으로 실행됨
+* interval+deadline만 정상적으로 실행됨
 
 ```logcat
 08-01 20:35:57.676 5770-5770/packagename D/DETECTAPP: [PackageStatusService] onCreate
@@ -110,10 +110,31 @@ interval+deadline만 정상적으로 실행됨
     [SingleJobService] [1001] isOverrideDeadlineExpired!
 ```
 
+* Deadline으로 인해 실행된 경우에는 조건들의 변화 모두 무시됨. 즉, 무조건 실행되는 것이 보장되는 듯.
+
+```logcat
+// onStartJob()에서 1분동안 멈추는 코드를 작성함
+08-02 12:30:24.033 14713-14713/packagename D/DETECTAPP: [SingleJobService] [1001] onStartJob : packagename.SingleJobService@4f0e63
+08-02 12:30:24.034 14713-14713/packagename D/DETECTAPP: [SingleJobService] [1001] isOverrideDeadlineExpired!
+08-02 12:30:24.034 14713-14713/packagename D/DETECTAPP: [SingleJobService] [1001] 멈춰
+// $ adb shell dumpsys battery unplug 을 하였으나 Stop되지 않고 정상종료됨
+08-02 12:31:24.037 14713-14713/packagename D/DETECTAPP: [SingleJobService] [1001] 풀려
+```
+
+??? 이건 왜 정상종료하지??;;;
+
+```logcat
+08-02 12:41:53.459 14713-14713/packagename D/DETECTAPP: [SingleJobService] [1002] onStartJob : packagename.SingleJobService@13a15b7
+08-02 12:41:53.459 14713-14713/packagename D/DETECTAPP: [SingleJobService] [1002] 멈춰
+// $ adb shell dumpsys battery unplug 을 하였으나 Stop되지 않고 정상종료됨(????)
+08-02 12:42:53.461 14713-14713/packagename D/DETECTAPP: [SingleJobService] [1002] 풀려
+```
+
+
+
 ## 주의사항
 * JobScheduler는 Doze모드에서 작동하지 않는다.
 > [참고](https://stackoverflow.com/questions/38344220/job-scheduler-not-running-on-android-n)
-
 
 ## 참고자료
 * https://medium.com/til-kotlin-ko/android-o%EC%97%90%EC%84%9C%EC%9D%98-%EB%B0%B1%EA%B7%B8%EB%9D%BC%EC%9A%B4%EB%93%9C-%EC%B2%98%EB%A6%AC%EB%A5%BC-%EC%9C%84%ED%95%9C-jobintentservice-250af2f7783c
