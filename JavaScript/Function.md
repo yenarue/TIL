@@ -77,4 +77,28 @@ function myConcat(separator) {
 myConcat("/", "apple", "oragne", "peach");  // apple/orange/peach
 ```
 
+## 함수 바인딩 (`call`, `apply`, `bind`)
+해당 함수 로직에서의 `this`를 설정할 수 있다.
 
+* `this` : 함수가 호출되었을 때 그 함수가 속해있던 객체의 참조
+
+```js
+function say(greetings, honotifics) {
+    console.log(greetings + " " + honotifics + this.name);
+}
+
+const tom = { name: "Tom Sawyer" };
+const becky = { name: "Becky Thatcher" };
+
+// apply
+say.apply(tom, ["Hello!", "Mr."]);  // "Hello! Mr.Tom Sawyer"
+say.apply(becky, ["Hi!", "Ms."]);   // "Hi! Ms.Becky Thatcher"
+
+// call
+say.call(tom, "Hello!", "Mr.");
+say.call(becky, "Hi!", "Ms.");
+
+// bind
+const sayToTom = say.bind(tom);
+sayToTom("Hello!", "Mr.");   // "Hello! Mr.Tom Sawyer"
+```
