@@ -154,6 +154,7 @@ $ wget https://s3.amazonaws.com/awsinaction/chapter9/wordpress-import.sql
 ```bash
 $ aws rds describe-db-instances --query DBInstance[0].Endpoint
 ```
+또는 aws console RDS의 Instance Detail에서 Endpoint 를 확인한다.
 
 다시 EC2로 돌아가서, 위에서 찾은 DBHostName을 아래 명령어에 입력한다
 
@@ -315,7 +316,12 @@ $ aws rds create-db-instance-read-replica --db-instance-identifier awsinaction-d
 $ aws rds promote-read-replica --db-instance-identifier awsinaction-db-read
 ```
 
-### 클린업
+### ReadOnly Replica 클린업
 ```bash
 $ aws rds delete-db-instance --db-instance-identifier awsinaction-db-read --skip-final-snapshot
+```
+
+## 전체 클린업
+```bash
+$ aws cloudformation delete-stack --stack-name wordpress
 ```
