@@ -40,3 +40,9 @@ captures/
 
 # Keystore files
 *.jks
+
+### Mac ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
