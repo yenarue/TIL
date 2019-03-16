@@ -1,6 +1,8 @@
 합성곱 신경망 (CNN, Convolutional Neural Network)
 =====
 
+이미지 인식과 음성 인식 등에서 주로 사용된다.
+
 * 합성곱 계층 (convolutional layer)
 * 폴링 계층 (polling layer)
 
