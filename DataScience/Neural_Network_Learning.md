@@ -128,6 +128,8 @@ def main():
 
 - MSE
   - Regression 에 주로 사용된다.
+    - 경사하강법(Gradient Descent) 사용시 언제나 답을 찾을 수 있다.
+    - ![](./images/why-mse-is-good-for-regression.png)
   - [Gradient Vanishing](https://www.youtube.com/watch?v=Y1Z7YWr5PQE) 문제로 학습속도가 느리다. [#1](https://www.youtube.com/watch?v=QAhlSzRLSos) [#2](https://www.youtube.com/watch?v=SKMpmAOUa2Q)
 - CEE
   - 시그모이드나 소프트맥스 함수를 사용하는 Classification 시에는 학습속도 측면에서 더 빠르다.
