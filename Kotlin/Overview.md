@@ -1,7 +1,7 @@
 Kotlin
 ====
 
-> [Coursera 의 'Kotlin for Java Developers'](<https://www.coursera.org/learn/kotlin-for-java-developers>) 강의를 참고하여 작성하는 TIL 입니다.
+> 스터디파이의 '코틀린 입문' 스터디 진행과 함께 [Coursera 의 'Kotlin for Java Developers'](<https://www.coursera.org/learn/kotlin-for-java-developers>) 강의를 참고하며 작성하는 TIL 입니다.
 
 함수형 프로그래밍과 객체지향 프로그래밍을 동시에 지원하며 Java와 상호운용 될 수 있으면서도 Java의 단점을 개선하는 실용적인 언어를 지향한다.
 
@@ -53,6 +53,8 @@ JVM 생태계에 잘 녹아들어가는 것으로 시작하여 다른 플랫폼�
 Kotlin은 Java ByteCode로 컴파일된다.
 
 Java 코드에서 Kotlin 코드로 자동 변환을 할 수 있다. (IntelliJ계열 IDE에서 모두 가능 > `convert Java to Kotlin`)
+
+> [Tip]  `Tools` > `Kotlin` > `Show Kotlin Bytecode` > `Decompile` 을 통해 Kotlin 코드가 Java Bytecode 및 Java 소스코드에 어떻게 대응되는지 확인해볼 수 있다.
 
 ## Before (Java) & After (Kotlin)
 
