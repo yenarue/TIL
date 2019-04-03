@@ -16,11 +16,9 @@ JVM 생태계에 잘 녹아들어가는 것으로 시작하여 다른 플랫폼�
 * 간결성 (Concise)
 * 안전성 (Safe)
   * Null-safety, smart casts
-* 상호운용성 (Interoperable)
+* 상호운용성 (Interoperable, interop)
   * Java와의 호환성을 유지한다.
 * 툴 친화성 (Tool-friendly)
-
-
 
 ## Scala와의 비교
 
@@ -213,10 +211,43 @@ Java 코드로 작성되었던 기존 코드보다 훨씬 간결해지고 가독
 
 그러므로, Java -> Kotlin 으로 자동 변환해주는 기능이 꽤 편하긴 하지만 제대로 코틀린스럽게 변경하려면 매뉴얼로 코드를 변경하여야 한다 :-)
 
+## 기존 프로젝트에 Kotlin 적용하기
+
+부분 적용이 가능함. 천천히 적용하셈
+
+unit test 부터 시작해서 전체 프로젝트에 적용하도록!
+
+## Hello, Kotlin!
+
+```kotlin
+package intro
+
+fun main(args: Array<String>) {
+    val name = "Kotlin"
+    println("Hello, $name!")	// Hello, Kotlin!
+    println("Hello, ${args.getOrNull(0)}!")		// Hello, null!
+}
+```
+
+### String templates
+
+`"…$variable…."`, `"….${functionCall()}…."` 등의 인라인 호출이 가능
+
+- 위의 예제에서 `name` 변수를 스트링에 인라인시켰다.
+- 위의 예제에서 `args.getOrNull(0)` 메소드를 스트링에서 인라인 콜을 했다. 
+
+
+
+## 결론
+
+지금까지 Kotlin 을 짧게 훑어보았다.
+
+다음부터는 Kotlin의 문법을 살펴보도록 하겠따!
+
 
 
 ## 참고자료
 
-* [[coursera] Kotlin for Java Developers - Introduction](https://www.coursera.org/lecture/kotlin-for-java-developers/introduction-to-the-course-1bpIV)
+* [[coursera] Kotlin for Java Developers - 1. Introduction / 2. Starting up with Kotlin](https://www.coursera.org/lecture/kotlin-for-java-developers/introduction-to-the-course-1bpIV)
 * [[번역] 스칼라 vs 코틀린 : 더 나아진 자바를 목표로 경쟁하는 2개의 언어](https://hamait.tistory.com/895)
-* [Try Kotlin]([https://try.kotlinlang.org](https://try.kotlinlang.org/))
+* [Try Kotlin, Web IDE](https://try.kotlinlang.org/)
