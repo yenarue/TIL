@@ -293,7 +293,7 @@ Checked Exception을 강제했던 Java와는 사뭇 다른 결과이다. Kotlin�
 
 > Java의 Checked Exception은 오용을 낳아 불필요한 코드 블럭이 생겨 가독성을 해치고, 예외가 발생한 즉시 나타나지 않고 위로 올라가고 나서야 나타나고 다뤄지다보니 처리하기 애매하거나 새로운 예외를 만들어서 던져버리는 경우가 많았는데 Kotlin에서는 아예 Checked Exception을 처리하지 않도록 한 점이 맘에 든다! :-D
 
-참고로, `@Throws` 어노테이션을 사용하지 않고 try-catch 구문을 쓰게되면 **아예 컴파일 에러가 발생**한다. Kotlin의 Checked Exception에 대한 의견이 어떤지를 확실하게 엿볼 수 있다 :-)ㅋ
+참고로, `@Throws` 어노테이션을 사용하지 않고 try-catch 구문을 쓰게되면 **호출하는 구문에서 컴파일 에러가 발생**한다(Java에서는 예외를 던지는 곳에서 에러 발생함: try-catch 구문을 넣던지 위로 올리든지 하라는 에러). Kotlin의 Checked Exception에 대한 의견이 어떤지를 확실하게 엿볼 수 있다 :-)ㅋ
 
 ```kotlin
 fun boo() {
