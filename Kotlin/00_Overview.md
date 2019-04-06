@@ -13,12 +13,12 @@ JVM 생태계에 잘 녹아들어가는 것으로 시작하여 다른 플랫폼�
 
 ## Kotiln의 디자인 철학
 
-* 간결성 (Concise)
-* 안전성 (Safe)
+* 간결성 (Concise) : boilerplate 코드를 줄인다
+* 안전성 (Safe) : Exception 발생을 줄여 런타임 에러를 줄인다. 런타임 에러가 발생할 가능성이 있는 로직은 문법적인 제약을 걸음으로서 컴파일 에러를 발생시켜 발견하기 힘든 런타임 에러를 지양하도록 한다.
   * Null-safety, smart casts
-* 상호운용성 (Interoperable, interop)
+* 상호운용성 (Interoperable, interop) : JVM 환경에서 동작가능하게 함으로서 Java와의 호환성을 유지하여 기존 Java 프로젝트에서 Kotlin 코드를 상호 운용할 수 있도록 한다. 이 철학은 타 플랫폼으로도 확장되어 JavaScript 에서도 운용되도록 구현되고 있다.
   * Java와의 호환성을 유지한다.
-* 툴 친화성 (Tool-friendly)
+* 툴 친화성 (Tool-friendly) : 코틀린 언어를 사용하는데에 필요한 도구를 최대한 지원한다.  특히 JetBrain에서 개발된 만큼 JetBrain IDE에서 최상의 도구들을 파워풀하게 지원하고 있다.
 
 ## Scala와의 비교
 

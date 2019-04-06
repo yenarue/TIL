@@ -287,7 +287,11 @@ fun foo() {
 foo();
 ```
 
-Checked Exception을 강제했던 Java와는 사뭇 다른 결과이다. Kotlin이 이러한 철학을 가져가게 된 데에는 사실 오래된 이유가 있다. (관련 링크 : [Java에서 Checked Exception은 언제 써야 하는가?](http://egloos.zum.com/benelog/v/1901121)) 간단하게 설명하자면, Java에서 초반에 강점으로 내세웠던 Checked Exception 개념이 코드 품질 하락 등의 이유로 '실패한 개념'인 것으로 결론나면서 Kotlin에서는 이를 지양하는 철학을 가져가게 된 것이다.
+Checked Exception을 강제했던 Java와는 사뭇 다른 결과이다. Kotlin이 이러한 철학을 가져가게 된 데에는 사실 오래된 이유가 있다. (관련 링크 : [Java에서 Checked Exception은 언제 써야 하는가?](http://egloos.zum.com/benelog/v/1901121))
+
+간단하게 설명하자면, Java에서 초반에 강점으로 내세웠던 Checked Exception 개념이 코드 품질 하락 등의 이유로 '실패한 개념'인 것으로 결론나면서 Kotlin에서는 이를 지양하는 철학을 가> 져가게 된 것이다.
+
+> Java의 Checked Exception은 오용을 낳아 불필요한 코드 블럭이 생겨 가독성을 해치고, 예외가 발생한 즉시 나타나지 않고 위로 올라가고 나서야 나타나고 다뤄지다보니 처리하기 애매하거나 새로운 예외를 만들어서 던져버리는 경우가 많았는데 Kotlin에서는 아예 Checked Exception을 처리하지 않도록 한 점이 맘에 든다! :-D
 
 참고로, `@Throws` 어노테이션을 사용하지 않고 try-catch 구문을 쓰게되면 **아예 컴파일 에러가 발생**한다. Kotlin의 Checked Exception에 대한 의견이 어떤지를 확실하게 엿볼 수 있다 :-)ㅋ
 
@@ -312,3 +316,5 @@ try {
 * [코틀린 입문 스터디 (4) Control Structures](<https://medium.com/@kbm1378/%EC%BD%94%ED%8B%80%EB%A6%B0-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%84%B0%EB%94%94-4-control-structures-e8e9af298ebd>)
 * [Kotlin 키워드 및 연산자 해부 Part1](<https://medium.com/@joongwon/kotlin-kotlin-%ED%82%A4%EC%9B%8C%EB%93%9C-%EB%B0%8F-%EC%97%B0%EC%82%B0%EC%9E%90-%ED%95%B4%EB%B6%80-1-hard-keywords-3062f5fe2d11>)
 * [Java에서 Checked Exception은 언제 써야 하는가?](http://egloos.zum.com/benelog/v/1901121)
+* [Java Checked Exceptions : Good or Bad?](<https://programming.guide/java/checked-exceptions-good-or-bad.html>)
+
