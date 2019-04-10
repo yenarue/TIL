@@ -110,3 +110,73 @@ public static final String boo() {
 }
 ```
 
+## Safe casts : `as?`
+
+### Type cast (Unsafe cast) : `as`
+
+명시적으로 캐스팅 할때는 `as`를 쓰면 된다. `is` 를 이용하면 smart cast가 되어 암시적 캐스팅이 가능하다.
+
+```kotlin
+// as 를 이용한 명시적 캐스팅
+val s = any as String
+
+// is 를 이용한 암시적 캐스팅
+if (any is String) {
+    any.toUppserCase()
+}
+```
+
+언뜻보면 꽤 안전해보이지만 `as` 사용시에 주의해야할 점이 있다.
+
+`Int` 와 `Int?` 는 Non-nullable 타입과 Nullable 타입으로서 다른 타입처럼 보여진다. 그렇다면 아래 코드는 무엇을 리턴할까?
+
+```kotlin
+val s: Int = 1
+println(s as Int?)	// 1
+```
+
+다른 타입이라 생각됨에도 불구하고 캐스팅되어 1을 리턴한다. 이는 `Int?` 이 Annotation 방식으로 구현되어있기 때문이다. (윗 단락의 'Under the hood' 부분 참고) 본질적으로는 같은 타입이며 Null이 될 수 있는지의 여부를 그저 Annotation로 처리한 것일 뿐이다.
+
+> TODO : Optional class vs Annotation, Sub-typing 등 학습하여 내용 추가하기
+
+### Safe cast : `as?`
+
+`as?` 를 사용하면 좀 더 안전한 캐스팅이 가능하다. 캐스팅이 성공하면 해당 타입을, 성공하지 않으면 null 을 리턴한다.
+
+```kotlin
+foo as? Type
+// foo가 Type이면 캐스팅이 됨
+// foo가 Type이 아니면 null 반환
+// 아래의 조건 분기문과 동일
+if (foo is Type) foo else null
+
+// 아래와 같이 사용하는 예를 확인해보면 왜 안전한지 감이 바로 올 것임!
+(any as? String)?.toUpperCase()
+```
+
+## Nullability의 중요성 (importance of nullability)
+
+Kotlin 타입 시스템의 Nullability는 Kotlin의 가장 중요한 기능이다.
+
+NULL 자체는 저장된 값이 없다는 것을 표현하기 위한, 꼭 필요한 개념이지만 Runtime 상에서 발생하는 Null Point Exception을 예상하기 어렵다는 점 때문에 안티패턴으로도 치부되고 있다.
+
+### 안티 패턴을 적합한 패턴으로! (anti-pattern to legitimate pattern)
+
+Kotlin에서는 Nullable/Non-nullable 타입과 `?`, `?:`, `!!`, `as?` 등의 오퍼레이터들, smart casts 등의 기능들을 통해 NULL의 문제들을 효과적으로 통제하고 추적할 수 있다. 
+
+그리고 NULL을 일급 객체 (First Class Citizen)로 다룰 수 있다.
+
+### 서브타이핑 (SubTyping)
+
+Java8의 Optional 보다 Kotlin이 선택한 Annotation 방식이 더 좋은 이유는 무엇일까? 성능 오버헤드가 적다는 이유외에도 런타임 상에서 Nullable 타입과 Non-Nullable 타입이 동일한 타입으로 동작하여 변수 할당에 유연성을 가져갈 수 있다는 점도 그 이유이다! :-D
+
+* Non-Nullable 타입과 Nullable 타입은 서브타이핑이다!
+
+> *서브클래스가 슈퍼클래스를 대체할 수 있는 경우 이를 서브타이핑이라고 한다. 서브클래스가 슈퍼클래스를 대체할 수 없는 경우에는 서브클래싱이라고 한다. 서브타이핑은 설계의 유연성이 목표인 반면 서브클래싱은 코드의 중복 제거와 재사용이 목적이다. 흔히 서브타이핑을 인터페이스 상속(interface inheritance)이라고 하고, 서브클래싱을 구현 상속(implementation inheritance)이라고 한다.*
+
+
+
+## 참고자료
+
+* [코틀린 입문 스터디 (7) Nullability](<https://medium.com/@kbm1378/%EC%BD%94%ED%8B%80%EB%A6%B0-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%84%B0%EB%94%94-7-nullability-77d92220aad2>)
+* [[Kotlin] Kotlin 키워드 및 연산자 해부 Part1](<https://medium.com/@joongwon/kotlin-kotlin-%ED%82%A4%EC%9B%8C%EB%93%9C-%EB%B0%8F-%EC%97%B0%EC%82%B0%EC%9E%90-%ED%95%B4%EB%B6%80-1-hard-keywords-3062f5fe2d11>)
