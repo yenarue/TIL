@@ -23,7 +23,7 @@ nonNull.length	// ok
 nullable.length	// compile failed - null이 될 가능성이 있기 때문
 ```
 
-#### Safe access
+#### Safe access: `?`
 
 변수가 null이 아닐 때는 `.` 연산을 진행하고, null 일때는 null을 리턴한다.
 
@@ -89,7 +89,7 @@ NPE가 발생 가능하다는 것은 어찌보면 Java와 비슷한 꼴이 아�
 
 #### Nullable types != Optional
 
-Nullable 타입을 반환하는 함수를 Java로 변환하면 Optional 클래스가 아니라 Java annotation 형태로 변환된다. 이에 따라 성능 오버헤드는 발생하지 않으면서도 Null 문제를 해결할 수 있다.
+Nullable 타입을 반환하는 함수를 Java로 변환하면 Optional 클래스가 아니라 Java annotation 형태로 변환된다. .
 
 ```kotlin
 // Kotlin
@@ -109,6 +109,11 @@ public static final String boo() {
     return "boo";
 }
 ```
+
+#### Optional 클래스 대신 Nullable 타입을 사용함으로써 얻는 장점들
+
+1. Kotlin에는 아예 Optional 클래스 자체가 존재하지 않는데, Null 처리를 위해 Wrapper 객체를 사용하던 Optional 클래스를 사용하지 않으므로 이에 따라 런타임 시에 추가적인 성능 오버헤드는 발생하지 않으면서도 Null 문제를 해결할 수 있게 된다.
+2. Nullable 타입은 컴파일 타임에 Null 여부를 체크할 수 있기 때문에 안전성이 높다 볼 수 있다.
 
 ## Safe casts : `as?`
 
@@ -136,8 +141,6 @@ println(s as Int?)	// 1
 ```
 
 다른 타입이라 생각됨에도 불구하고 캐스팅되어 1을 리턴한다. 이는 `Int?` 이 Annotation 방식으로 구현되어있기 때문이다. (윗 단락의 'Under the hood' 부분 참고) 본질적으로는 같은 타입이며 Null이 될 수 있는지의 여부를 그저 Annotation로 처리한 것일 뿐이다.
-
-> TODO : Optional class vs Annotation, Sub-typing 등 학습하여 내용 추가하기
 
 ### Safe cast : `as?`
 
@@ -180,3 +183,5 @@ Java8의 Optional 보다 Kotlin이 선택한 Annotation 방식이 더 좋은 이
 
 * [코틀린 입문 스터디 (7) Nullability](<https://medium.com/@kbm1378/%EC%BD%94%ED%8B%80%EB%A6%B0-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%84%B0%EB%94%94-7-nullability-77d92220aad2>)
 * [[Kotlin] Kotlin 키워드 및 연산자 해부 Part1](<https://medium.com/@joongwon/kotlin-kotlin-%ED%82%A4%EC%9B%8C%EB%93%9C-%EB%B0%8F-%EC%97%B0%EC%82%B0%EC%9E%90-%ED%95%B4%EB%B6%80-1-hard-keywords-3062f5fe2d11>)
+* [Kotlin Nullable Type vs. Java Optional](<https://medium.com/@fatihcoskun/kotlin-nullable-types-vs-java-optional-988c50853692>)
+  * [번역글 - 코틀린 Nullable 타입 vs. 자바 Optional](<https://medium.com/@limgyumin/%EC%BD%94%ED%8B%80%EB%A6%B0-nullable-%ED%83%80%EC%9E%85-vs-%EC%9E%90%EB%B0%94-optional-e698adc6d617>)
