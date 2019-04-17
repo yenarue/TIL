@@ -157,23 +157,6 @@ if (foo is Type) foo else null
 (any as? String)?.toUpperCase()
 ```
 
-## 게으른 초기화 : `lateinit` 
-
-Kotlin에서는 Non-Nullability 타입인 경우 선언시 초기화 해주도록 강제하고 있다. 하지만 실무에서는 의존성 주입이나 설계상의 이유(값을 서버로 부터 받아와서 초기화해야한다든지…)로 나중에 초기화를 진행해야 하는 경우들이 생긴다. 이럴 경우를 대비하여 Kotlin에는 `lateinit` 키워드가 존재한다. 
-
-`lateinit` 키워드는 변경가능한 변수(Mutable Variable)에 대해 나중에 초기화를 해주겠다고 약속하는 키워드이다. 
-
-```kotlin
-lateinit var person: Person
-person = Person("yena kim")	// 나중에 초기화 가능
-```
-
-`lateinit` 키워드를 사용할 때에는 아래 사항들을 주의하도록 하자:
-
-* `Int`, `Double` 과 같은 원시타입(primitive type) 에는 사용할 수 없다.
-* `val` 키워드와는 함께 사용할 수 없다. `val` 키워드는 변경 불가능한 변수를 뜻하기 때문이다.
-* `lateinit` 키워드 사용 후 초기화를 해주지 않은 상태로 접근하게되면 당연히 NPE 에러가 발생하므로 유의하여 사용해야 한다.
-
 ## Nullability의 중요성 (importance of nullability)
 
 Kotlin 타입 시스템의 Nullability는 Kotlin의 가장 중요한 기능이다.
