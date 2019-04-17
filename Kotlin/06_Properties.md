@@ -143,6 +143,31 @@ var counter: Int = 0
 
 ## Property in interface
 
+interface에도 property를 정의할 수 있다.
+
+### override accessor
+
+property를 가지고있는 interface를 구현(implement)하는 클래스에서는 accessor 메소드들을 재정의(override) 해주어야 한다.
+
+```kotlin
+interface User {
+  val nickName: String
+}
+
+// 값 자체를 넣어주는 경우
+class FacebookUser(val accountId: Int): User {
+  override val nickname = getFacebookName(accountId)
+}
+
+// getter를 재정의하는 경우
+class EmailUser(val email: String): User {
+  override val nickName: String
+  	get() = email.substringBefore('@')
+}
+```
+
+### opened property
+
 인터페이스에 정의된 공개된 프로퍼티나 getter는 smart cast 될 수 없다.
 
 ```kotlin
@@ -172,7 +197,7 @@ fun analyzeUserSession(session: Session) {
 
 ### Extension properties
 
-Extension Function 과 유사한 방법으로 프로퍼티를 추가할 수 있다.
+프로퍼티 호출은 엄밀히 말해서 accessor 메소드를 호출하는 것을 뜻하기 때문에, Extension Function 과 유사한 방법으로 프로퍼티를 확장(extension) 시킬 수 있다.
 
 ```kotlin
 var StringBuilder.lastChar: Char
@@ -189,9 +214,9 @@ println(sb) // abd
 
 ## Lazy or late initialization of properties
 
-### 게으른 프로퍼티 (Lazy property)
+### 게으른 프로퍼티 (Lazy property) : `by lazy`
 
-필요할 때에(게으르게) 값을 계산한다.
+필요할 때에(게으르게) 값을 계산한다. 실제로 사용될 때에 최초 1번 연산이 수행되고 반환 값을 저장하게 된다.
 
 ```kotlin
 val lazyValue: String by lazy {
@@ -207,7 +232,7 @@ println(lazyValue)
 // Hello
 ```
 
-## 늦은 초기화(Late initialization) : `lateinit` 
+### 늦은 초기화(Late initialization) : `lateinit` 
 
 Kotlin에서는 Non-Nullability 타입인 경우 선언시 초기화 해주도록 강제하고 있다. 하지만 실무에서는 의존성 주입이나 설계상의 이유(값을 서버로 부터 받아와서 초기화해야한다든지…)로 나중에 초기화를 진행해야 하는 경우들이 생긴다. 이럴 경우를 대비하여 Kotlin에는 `lateinit` 키워드가 존재한다. 
 
@@ -218,18 +243,18 @@ lateinit var person: Person
 person = Person("yena kim")	// 나중에 초기화 가능
 ```
 
-### 주의사항
+#### 주의사항
 
 `lateinit` 키워드를 사용할 때에는 아래 사항들을 주의하도록 하자:
 
 - `Int`, `Double` 과 같은 원시타입(primitive type) 에는 사용할 수 없다.
 - `val` 키워드와는 함께 사용할 수 없다. `val` 키워드는 변경 불가능한 변수를 뜻하기 때문이다.
 - `lateinit` 키워드와 함께 선언된 변수는 **Non-Nullable 타입**이다
-- `lateinit` 키워드 사용 후 초기화를 해주지 않은 상태로 접근하게되면 당연히 NPE 에러가 발생하므로 유의하여 사용해야 한다.
+- `lateinit` 키워드 사용 후 초기화를 해주지 않은 상태로 접근하게되면 당연히 런타임 에러가 발생하므로 유의하여 사용해야 한다.
 
-결국 NPE가 발생할 여지가 생기는 것이니 billion dollar mistake 가 그냥 그대로 재현되는 것이 아닌가 하는 생각이 들 수 있으나, `lateinit` 키워드 사용 후 발생한 NPE는 좀 더 자세한 이유를 로그에 뿌려주기 때문에 좀 더 나은 선택이라고 볼 수 있다. (ex : `lateinit property myData has not been initialized`)
+결국 NPE가 발생할 여지가 생기는 것이니 billion dollar mistake 가 그냥 그대로 재현되는 것이 아닌가 하는 생각이 들 수 있겠다. `lateinit` 키워드 사용 시 발생하는 런타임 에러는 NPE가 아닌 `UninitializedPropertyAccessException` 으로서 NPE에 비해 **좀 더 자세하고 명확한 이유**를 로그에 뿌려주기 때문에 비동기 처리 등의 이유로 나중에 초기화된다는 확신이 있는 경우에는 `lateinit` 키워드를 사용하는 것이 Nullable 처리를 하는 것 보다 좀 더 나은 선택이라고 볼 수 있다. (ex : `lateinit property myData has not been initialized`)
 
-### 초기화 여부 판단: `isInitialized`
+#### 초기화 여부 판단: `isInitialized`
 
 `isInitialized` 값으로 초기화 여부를 판단할 수 있다.
 
