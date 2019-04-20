@@ -252,7 +252,7 @@ person = Person("yena kim")	// 나중에 초기화 가능
 - `lateinit` 키워드와 함께 선언된 변수는 **Non-Nullable 타입**이다
 - `lateinit` 키워드 사용 후 초기화를 해주지 않은 상태로 접근하게되면 당연히 런타임 에러가 발생하므로 유의하여 사용해야 한다.
 
-결국 NPE가 발생할 여지가 생기는 것이니 billion dollar mistake 가 그냥 그대로 재현되는 것이 아닌가 하는 생각이 들 수 있겠다. `lateinit` 키워드 사용 시 발생하는 런타임 에러는 NPE가 아닌 `UninitializedPropertyAccessException` 으로서 NPE에 비해 **좀 더 자세하고 명확한 이유**를 로그에 뿌려주기 때문에 비동기 처리 등의 이유로 나중에 초기화된다는 확신이 있는 경우에는 `lateinit` 키워드를 사용하는 것이 Nullable 처리를 하는 것 보다 좀 더 나은 선택이라고 볼 수 있다. (ex : `lateinit property myData has not been initialized`)
+결국 런타임 에러가 발생할 여지가 생기는 것이니 billion dollar mistake 가 그냥 그대로 재현되는 것이 아닌가 하는 생각이 들 수 있겠다. `lateinit` 키워드 사용 시 발생하는 런타임 에러는 NPE가 아닌 `UninitializedPropertyAccessException` 으로서 NPE에 비해 **좀 더 자세하고 명확한 이유**를 로그에 뿌려주기 때문에 비동기 처리 등의 이유로 나중에 초기화된다는 확신이 있는 경우에는 `lateinit` 키워드를 사용하는 것이 Nullable 처리를 하는 것 보다 좀 더 나은 선택이라고 볼 수 있다. (ex : `lateinit property myData has not been initialized`)
 
 #### 초기화 여부 판단: `isInitialized`
 

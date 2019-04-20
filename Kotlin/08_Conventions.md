@@ -80,7 +80,7 @@ for (c in "abc") { }
 
 Kotlin의 String이 이터레이팅 될 수 있는 이유는 String의 확장 함수로 iterator 연산자를 구현했기 때문이다.
 
-### destruction declaration
+### 비구조화 선언 (destruction declaration)
 
 람다와 루프문에서 사용가능했던 `val (a, b) = p` 와 같은 표현은 사실상 `val a = p.component1()` 과 `val b = p.component2()` 에 대응된다. 이는 `component()` 메소드를 생성해야 사용 가능하다.
 
@@ -88,9 +88,9 @@ data class 는 이 component()를 자동으로 구현해준다:
 
 ```kotlin
 data class Contact(val name: String, val email: String, val phoneNumber: String) {
-  fun component1() = name
-  fun component2() = email
-  fun component3() = phoneNumber
+//  fun component1() = name
+//  fun component2() = email
+//  fun component3() = phoneNumber
 }
 
 // underscore(_)로 선언된 변수는 사용하지 않는 것으로 판단하여 컴파일러가 생성하지 않도록 번역한다.
