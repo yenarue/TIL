@@ -39,12 +39,14 @@ s?.length // Int? 타입이 리턴됨
 
 #### Elvis operator : `?:`
 
-물론 null 일 경우에 null이 아닌 디폴트 값을 설정하는 것도 간단하게 가능하다
+물론 null 일 경우에 null이 아닌 디폴트 값을 설정하는 것도 간단하게 가능하다!
 
 ```kotlin
 val length: Int = if (s != null) s.length else 0
 val length: Int = s?.length ?: 0
 ```
+
+이 연산자는 Groovy 에서 아이디어를 얻어 가져온 것이다.
 
 When using safe access, you can use so called Elvis separator and provide the default value that will be used when your expression is null. The following scheme illustrates how Elvis operator works. The result is either the left expression if it's not null, or the right expression if the left expression is null. Why score it like this? You can guess it if you read the operator as an emoticon. Elvis operator isn't a quarter invention. This name comes from Groovy. The whole bunch of nullability operators, including Elvis operator, comes from Groovy. They are proven to be very useful for working with expressions that can be null.
 
