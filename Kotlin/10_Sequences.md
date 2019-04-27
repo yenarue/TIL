@@ -124,9 +124,86 @@ inline fun <T> Sequence<T>.find(predicate: (T) -> Boolean): T?
 
 ## Library Functions
 
+메소드 체이닝을 할 때 퍼포먼스를 최적화하는 방법들은 다음과 같다:
 
+1. Sequence 를 사용한다 : 중간콜렉션을 생성할 때 발생하는 성능 오버헤드를 피할 수 있다.
+2. 여러개의 메소드 체이닝을 1개의 메소드로 치환한다 (호출 최소화) : Koltin 라이브러리 함수들을 파악하자.
+3. 연산의 순서를 변경한다
 
+여기서는 2번. 메소드 체이닝을 최소화하는 방법에 대해 알아보도록 하겠다.
 
+### `count`
+
+```kotlin
+people.filter { it.age < 21 }.size
+people.count { it.age < 21 }
+```
+
+### `sortedByDescending`
+
+```kotlin
+people.sortedBy { it.age }.reversed()
+people.sortedByDescending { it.age }
+```
+
+### `mapNotnull`
+
+```kotlin
+people.map { person -> person.takeIf { it.isPublicProfile }?.name }
+			.filterNotNull()
+people.mapNotNull { person -> person.takeIf { it.isPublicProfile }?.name }
+```
+
+### `getOrPut`
+
+```kotlin
+val map = mutableMapOf<Int, MutableList<Person>>()
+for (person in people) {
+  //// 이 부분을 한줄로
+  if (person.age !in map) {
+    map[person.age] = mutableListOf()
+  }
+  val group = map.getValue(person.age)
+  /////
+  group += person
+}
+
+val group = map.getOrPut(person.age) { mutableListOf() }
+group += person
+```
+
+### [`groupBy`](<https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/group-by.html>)
+
+```kotlin
+/// 전체를 한줄로
+val map = mutableMapOf<Int, MutableList<Person>>()
+for (person in people) {
+  if (person.age !in map) {
+    map[person.age] = mutableListOf()
+  }
+  val group = map.getValue(person.age)
+  group += person
+}
+///
+
+people.groupBy { it.age }
+```
+
+### [`groupingBy`](<https://kotlinlang.org/api/latest/jvm/stdlib/kotlin.sequences/grouping-by.html>)
+
+`groupBy` for Sequences in a lazy way. `groupBy` 는 종료 연산(terminal operation)이다. `groupingBy` 는 이 `groupBy` 의 Lazy 버전으로서 중간 연산(intermediate and stateless operation)이다.
+
+즉, `groupingBy` 는 그룹핑 결과로 나오는 Map 자체가 아니라 수행 할 작업을 저장하고 있는 객체를 반환한다.
+
+```kotlin
+people.asSequence()
+			.groupBy { it.age }
+			.mapValues { (_, group) -> group.size }
+
+people.asSequence()
+			.groupingBy { it.age }
+			.eachCount()
+```
 
 
 
