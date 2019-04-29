@@ -25,6 +25,8 @@ val maxOddSquare = list.asSequence()
 			.max()									// 9
 ```
 
+불필요한 중간 결과물을 내지 않는다는 점에서 퍼포먼스 오버헤드가 줄어든다. 그렇기 때문에 원소의 수가 많을 때 사용하면 속도나 메모리 면에서 훨씬 좋은 퍼포먼스를 낼 수 있다. 또한, terminal operation을 부르기 전까지는 실제 로직 동작이 이루어지지 않기 때문에 효율적인 연산 처리가 가능하다. 당장 연산할 필요 없이 필요할 때에만 연산하는 경우 유용하다.
+
 ### 비교에 대한 결론
 
 * Collections : intermediate collections are created on chained calls
@@ -210,3 +212,4 @@ people.asSequence()
 ## 참고자료
 
 * [코틀린 입문 스터디 **(15) Sequences**](https://medium.com/@kbm1378/코틀린-입문-스터디-15-sequences-52cfca1805c8)
+* [LINQ to Objects (4) Deferred Execution, Lazy Evaluation and Eager Evaluation](<https://weblogs.asp.net/dixin/linq-to-objects-deferred-execution-lazy-evaluation-and-eager-evaluation>)
