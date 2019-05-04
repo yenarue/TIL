@@ -352,6 +352,17 @@ mutableList.add(4)
 println(list)	// [1, 2, 3, 4]
 ```
 
+Mutable 타입과 Read Only 타입은 서로 호환이 가능하기 때문에 아래와 같이 접근 제한을 의도할 수 있다.
+
+```kotlin
+object Shop {
+  private val customers = mutableListOf<Customer>()
+  fun getCustomers(): List<Customer> = customers	// Read Only 타입으로만 외부에 공개
+}
+
+val customers = Shop.getCustomers()
+customers.add()	// compile error!
+```
 
 Mutability 관련 타입 또한 Java에는 존재하지 않는 타입이다. Java에서 정의된 함수를 Kotlin에서 호출하면 그 함수의 Mutability 는 어떻게 처리 될까?
 
