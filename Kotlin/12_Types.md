@@ -341,7 +341,17 @@ description?.length
 Kotlin의 Collection 타입은 안전성 및 가독성(의도 파악)을 위해 Mutability 타입을 도입했다. (ex. `MutableList`)
 
 * Mutable type : `add()`, `remove()`, `clear()` 등과 같이 수정 가능한 기능들이 제공되는 타입이다. 
-* Immutable type : 읽기 전용 타입으로서 Mutable 타입에서 제공되는 수정 가능 기능들이 제공되지 않는다. 이 타입을 Mutable 타입으로 선언된 변수에 할당하면 Mutable 으로 변환되어 할당된다.
+
+* Read Only type : 읽기 전용 타입으로서 Mutable 타입에서 제공되는 수정 가능 기능들이 제공되지 않는다. **하지만 Immutable 하지는 않다!** Mutable 타입을 Read Only 타입으로 선언된 변수에 넣고 Mutable 타입의 컬렉션을 수정하면 Read Only 타입도 내용이 수정된다. 같은 레퍼런스에 접근권한만 다르다고 보면 된다.
+
+```kotlin
+val mutableList = mutableListOf(1, 2, 3)
+val list: List<Int> = mutableList
+println(list)	// [1, 2, 3]
+mutableList.add(4)
+println(list)	// [1, 2, 3, 4]
+```
+
 
 Mutability 관련 타입 또한 Java에는 존재하지 않는 타입이다. Java에서 정의된 함수를 Kotlin에서 호출하면 그 함수의 Mutability 는 어떻게 처리 될까?
 
@@ -349,7 +359,7 @@ Mutability 관련 타입 또한 Java에는 존재하지 않는 타입이다. Jav
 
 이 역시 **Mutability 여부를 알 수 없는 타입**으로서 Platform 타입으로 처리된다. 즉, Platform 타입은 **Unknown Nullability + Unknown mutability** 라고 볼 수 있다.
 
-사실 Java의 Collection의 Mutability여부는 Mutable 이라 볼 수 있다 (수정 가능 하니까). 그렇기 때문에 Kotlin에서는 Mutable 타입의 변수든 Immutable 타입의 변수든 Java의 컬렉션을 할당할 수 있다. 개발자는 그냥 로직의 흐름에 맞게 Mutability를 결정해주면 된다.
+사실 Java의 Collection의 Mutability여부는 Mutable 이라 볼 수 있다 (수정 가능 하니까). 그렇기 때문에 Kotlin에서는 Mutable 타입의 변수든 Read Only 타입의 변수든 Java의 컬렉션을 할당할 수 있다. 개발자는 그냥 로직의 흐름에 맞게 Mutability를 결정해주면 된다.
 
 ## 참고자료
 
