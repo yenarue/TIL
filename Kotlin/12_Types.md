@@ -376,3 +376,4 @@ Mutability 관련 타입 또한 Java에는 존재하지 않는 타입이다. Jav
 
 * [코틀린 입문 스터디 **(17) Types**](<https://medium.com/@kbm1378/%EC%BD%94%ED%8B%80%EB%A6%B0-%EC%9E%85%EB%AC%B8-%EC%8A%A4%ED%84%B0%EB%94%94-17-types-d5644ea8ec81>)
 * [[Coursera] Kotlin for Java Developers > Types > Kotlin type hierarchy](<https://www.coursera.org/learn/kotlin-for-java-developers/lecture/zxwAb/kotlin-type-hierarchy>)
+* [Kotlin’s ‘Nothing’ Type](<https://proandroiddev.com/kotlins-nothing-type-946de7d464fb>)
