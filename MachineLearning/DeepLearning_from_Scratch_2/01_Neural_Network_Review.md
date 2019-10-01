@@ -404,7 +404,7 @@ class Affine:
 
 * 4단계 : 반복 - 1~3단계를 필요한 만큼 반복한다.
 
-#### 경사하강법 (Gradient Descent)
+#### [경사하강법 (Gradient Descent)](https://github.com/jjungyooni/Study/blob/master/DeepLearning_from_scratch/chapter_06.md)
 
 3단계에서 구한 '기울기' 는 손실을 가장 크게 하는 방향을 가리킨다. 즉, 이 기울기의 반대방향으로 갱신하면 손실을 줄일 수 있다는 뜻이다. => 경사하강법!
 
