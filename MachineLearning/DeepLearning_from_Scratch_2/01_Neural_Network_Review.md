@@ -1,7 +1,7 @@
 01_신경망 복습하기
 ====
 
-['밑바닥부터 시작하는 딥러닝'](,./DeepLearning_from_Scratch) 에서 학습한 내용들을 복습하며 숲을 다시 살펴보는 시간을 가져보자.
+['밑바닥부터 시작하는 딥러닝'](./DeepLearning_from_Scratch) 에서 학습한 내용들을 복습하며 숲을 다시 살펴보는 시간을 가져보자.
 
 ## 수학 & 파이썬
 
@@ -410,9 +410,25 @@ class Affine:
 
 * 확률적 경사하강법 (Stochastic Gradient Descent, SGD) : 미니배치에 대한 기울기를 이용한다.
   * ![](./images/e 1-16.png)
+
   * W : 가중치 매개변수
+
   * W미분 : W에 대한 손실함수의 기울기
+
   * 에타 : 학습률 (learning rate)
 
+  ```python
+  class SGD:
+      def __init__(self, lr=0.01):
+          self.lr = lr
+  
+      def update(self, params, grads):
+          for i in range(len(params)):
+              params[i] -= self.lr * grads[i]
+  ```
 
+## 실습해보기
 
+[스파이럴 데이터셋을 활용하여 비선형 구조의 데이터에 대한 분류를 학습시켜보자.](https://github.com/yenarue/TIL-sample-projects/tree/master/DataScience/DeepLearning-from-Scratch-2/spiral)
+
+* 모델 : 문제를 풀기 위해서 설계한 기법 (신경망, SVM(서포터 벡터 머신) 등...)
