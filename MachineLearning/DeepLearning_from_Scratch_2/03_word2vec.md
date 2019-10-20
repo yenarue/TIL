@@ -345,3 +345,133 @@ for word_id, word in id_to_word.items():
 
 위에서는 간단한 모델로 원리를 파악하기 위해 용어나 개념에 대한 자세한 설명은 생략하고 진행하였다. 여기서는 word2vec 에 관한 중요한 몇가지 이야기를 진행해본다.
 
+### CBOW 모델과 확률
+
+확률...사후확률..우도.... 등등....의 개념이 나온다. [여기서 설명했으니](../Math) 생략!
+
+* CBOW 모델의 손실함수 (데이터 1개에 대한)
+
+![](./images/e 3-2.png)
+
+* CBOW 모델의 손실함수 (말뭉치 전체에 대한)
+
+![](./images/e 3-3.png)
+
+### skip-gram 모델
+
+CBOW 모델과는 반대로, **타겟을 통해 맥락을 추측**하는 모델이다.
+
+![](./images/fig 3-23.png)
+
+* 입력층 : 1개 (타겟)
+* 출력층 : 맥락의 수
+
+![](./images/fig 3-24.png)
+
+타겟으로부터 주변 단어(맥락)을 추측하는 것을 확률표기로 나타내면 다음과 같다.
+
+![](./images/e 3-4.png)
+
+**Wt가 주어졌을 때, Wt-1과 Wt+1가 발생할 확률**을 뜻한다.
+
+Wt-1, Wt+1에 대해 조건부 독립이라고 가정하면 아래와 같은 식이 도출된다.
+
+![](./images/e 3-5.png)
+
+손실함수는 맥락의 수만큼 추측해야하므로 각 맥락에서 구한 손실의 총합이다.
+
+![](./images/e 3-7.png)
+
+#### CBOW와의 차이점
+
+skip-gram 모델이 CBOW 모델보다 단어 분산 표현의 정밀도가 더 좋은 경우가 많다. 타겟을 통해 맥락을 유추하는 것이 맥락을 통해 타겟을 유추하는 것보다 좀 더 복잡하고 어려운 문제이기 때문에 skip-gram 모델이 도출하는 단어의 분산표현이 좀 더 뛰어날 가능성이 높다.
+
+skip-gram 모델은 말뭉치 크기가 클수록, 저빈도 단어/유추 문제의 정답 성능이 뛰어나다. 하지만 학습속도는 CBOW보다 더 느리다. 손실을 맥락의 수만큼 구해야하기 때문이다.
+
+|                | CBOW                       | skip-gram                  |
+| -------------- | -------------------------- | -------------------------- |
+| 신경망 구성    | ![](./images/fig 3-12.png) | ![](./images/fig 3-24.png) |
+| 확률           | ![](./images/e 3-1.png)    | ![](./images/e 3-5.png)    |
+| 손실함수 (1개) | ![](./images/e 3-2.png)    | ![](./images/e 3-6.png)    |
+| 손실함수       | ![](./images/e 3-3.png)    | ![](./images/e 3-7.png)    |
+
+#### 구현
+
+위에서 도출한 수식들을 바탕으로 파이썬 코드로 옮겨보면 다음과 같다.
+
+```python
+import numpy as np
+from layers import MatMul, SoftmaxWithLoss
+
+
+class SimpleSkipGram:
+    def __init__(self, vocab_size, hidden_size):
+        V, H = vocab_size, hidden_size
+
+        # 가중치 초기화
+        W_in = 0.01 * np.random.randn(V, H).astype('f')
+        W_out = 0.01 * np.random.randn(H, V).astype('f')
+
+        # 계층 생성
+        # 입력층 1개
+        self.in_layer = MatMul(W_in)
+        # 출력층 1개
+        self.out_layer = MatMul(W_out)
+        # 맥락의 수만큼 손실 계층을 구한다
+        self.loss_layer1 = SoftmaxWithLoss()
+        self.loss_layer2 = SoftmaxWithLoss()
+
+        # 모든 가중치와 기울기를 리스트에 모은다
+        layers = [self.in_layer, self.out_layer]
+        self.params, self.grads = [], []
+        for layer in layers:
+            self.params += layer.params
+            self.grads += layer.grads
+
+        # 인스턴스 변수에 단어의 분산 표현을 저장한다
+        self.word_vecs = W_in
+
+    def forward(self, contexts, target):
+        h = self.in_layer.forward(target)
+        s = self.out_layer.forward(h)
+
+        l1 = self.loss_layer1.forward(s, contexts[:, 0])
+        l2 = self.loss_layer2.forward(s, contexts[:, 1])
+
+        loss = l1 + l2
+        
+        return loss
+
+    def backward(self, dout=1):
+        dl1 = self.loss_layer1.backward(dout)
+        dl2 = self.loss_layer2.backward(dout)
+        
+        ds = dl1 + dl2
+        
+        dh = self.out_layer.backward(ds)
+        self.in_layer.backward(dh)
+        
+        return None
+```
+
+### 통계기반 vs 추론기반
+
+|                                          | 통계 기반                            | 추론 기반                                                    |
+| ---------------------------------------- | ------------------------------------ | ------------------------------------------------------------ |
+| 단어의 분산표현을 얻는 방법              | 말뭉치 전체 통계으로부터 1회 학습    | 말뭉치를 일부분씩 여러번 학습한다. (미니배치)                |
+| 말뭉치가 변경되어 다시 도출해야하는 경우 | 처음부터 다시 계산해야 한다 (초기화) | 기존에 학습한 가중치를 초기값으로하여 재학습한다 (기존 학습 + a) |
+| 단어의 분산표현에 대한 성격/정밀도       | 단어의 유사성이 인코딩               | 단어의 유사성, 단어 사이의 패턴이 인코딩<br />(king - man + woman = queen 유추 가능)<br />=> 유추 문제가 강하다 |
+| '단어의 유사성' 에 대한 성능             | 통계기반이나 추론기반이나 비슷       | 통계기반이나 추론기반이나 비슷                               |
+
+두가지 기법은 완전히 분리될 수 있는 서로 다른 개념이 아니라 연결된 개념으로서 서로의 아이디어를 차용하기도 한다.
+
+실제로, word2vec 이후 **통계 기반 기법과 추론 기반 기법을 융합한 GloVe 라는 기법이 등장**했다. GloVe는 말뭉치 전체의 통계 정보를 손실 함수에 도입하여 미니배치 학습을 시키는 아이디어에서 출발한 기법이다.
+
+## 그 외
+
+이번 장을 학습하면서 개인적으로 궁금해졌던, 더 알아보고 싶었던 내용들 정리
+
+* 출처: [https://finewink.tistory.com/entry/학습데이터-부족현상-해결법-전이학습Transfer-Learning](https://finewink.tistory.com/entry/%ED%95%99%EC%8A%B5%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%B6%80%EC%A1%B1%ED%98%84%EC%83%81-%ED%95%B4%EA%B2%B0%EB%B2%95-%EC%A0%84%EC%9D%B4%ED%95%99%EC%8A%B5Transfer-Learning) [한페이지 토픽 리뷰] word2vec가 전이학습에 유용하다고 한다. 다음장에서 이어진다고 하길래 궁금해서 찾아봄.
+* 전이학습 (Transfer Learnning) : 학습 데이터 부족현상을 해결하는 방법 중 하나로서, 데이터가 풍부한 분야에서 훈련된 모델을 재사용하는 기법이다. word2vec가 전이학습에 유용하다고 한다. 다음장에서 이어진다고 하길래 궁금해서 찾아봄.
+  * https://finewink.tistory.com/entry/%ED%95%99%EC%8A%B5%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%B6%80%EC%A1%B1%ED%98%84%EC%83%81-%ED%95%B4%EA%B2%B0%EB%B2%95-%EC%A0%84%EC%9D%B4%ED%95%99%EC%8A%B5Transfer-Learning
+  * https://9bow.github.io/PyTorch-tutorials-kr-0.3.1/beginner/transfer_learning_tutorial.html
