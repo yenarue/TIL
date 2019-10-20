@@ -471,7 +471,11 @@ class SimpleSkipGram:
 
 이번 장을 학습하면서 개인적으로 궁금해졌던, 더 알아보고 싶었던 내용들 정리
 
-* 출처: [https://finewink.tistory.com/entry/학습데이터-부족현상-해결법-전이학습Transfer-Learning](https://finewink.tistory.com/entry/%ED%95%99%EC%8A%B5%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%B6%80%EC%A1%B1%ED%98%84%EC%83%81-%ED%95%B4%EA%B2%B0%EB%B2%95-%EC%A0%84%EC%9D%B4%ED%95%99%EC%8A%B5Transfer-Learning) [한페이지 토픽 리뷰] word2vec가 전이학습에 유용하다고 한다. 다음장에서 이어진다고 하길래 궁금해서 찾아봄.
 * 전이학습 (Transfer Learnning) : 학습 데이터 부족현상을 해결하는 방법 중 하나로서, 데이터가 풍부한 분야에서 훈련된 모델을 재사용하는 기법이다. word2vec가 전이학습에 유용하다고 한다. 다음장에서 이어진다고 하길래 궁금해서 찾아봄.
   * https://finewink.tistory.com/entry/%ED%95%99%EC%8A%B5%EB%8D%B0%EC%9D%B4%ED%84%B0-%EB%B6%80%EC%A1%B1%ED%98%84%EC%83%81-%ED%95%B4%EA%B2%B0%EB%B2%95-%EC%A0%84%EC%9D%B4%ED%95%99%EC%8A%B5Transfer-Learning
   * https://9bow.github.io/PyTorch-tutorials-kr-0.3.1/beginner/transfer_learning_tutorial.html
+* word2vec 이론을 정립한 Mikolov Tomas의 논문
+  * [논문] Mikolov Tomas ["Efficient Estimation of Word Representations in
+    Vector Space"](https://arxiv.org/pdf/1301.3781.pdf)
+  * [논문] Mikolov Tomas ["Distributed representations of words and phrases and their compositionality"](https://papers.nips.cc/paper/5021-distributed-representations-of-words-and-phrases-and-their-compositionality.pdf)
+
