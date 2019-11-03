@@ -157,9 +157,105 @@ Softmax 대신 네거티브 샘플링을 이용하면 어휘가 아무리 많아
 | 확률 | 소프트맥스                                      | 시그모이드<br />![](./images/e 4-2.png)         |
 | 손실 | 교차 엔트로피 오차<br />![](./images/e 1-7.png) | 교차 엔트로피 오차<br />![](./images/e 4-3.png) |
 
+#### Sigmoid with Loss 계층 구현
+
 그럼 이제 Sigmoid with Loss 계층을 구현해보자!
 
 먼저 Sigmoid with Loss 계층의 계산그래프를 살펴보면 다음과 같다:
 
 ![](./images/fig 4-10.png)
+
+* sigmoid와 CEE의 조합에 대한 역전파 : y - t (출력값과 정답레이블의 차이)
+
+![](./images/fig 4-12.png)
+
+나머지 계층들은 이미 구현코드를 작성한 바가 있으니 마지막 출력층(EmbeddingDot)에 대한 구현만 적어보겠다:
+
+```python
+import numpy as np
+from layers import Embedding
+
+class EmbeddingDot:
+    def __init__(self, W):
+        self.embed = Embedding(W)
+        self.params = self.embed.params
+        self.grads = self.embed.grads
+        self.cache = None
+
+    def forward(self, h, idx):
+        target_W = self.embed.forward(idx)
+        out = np.sum(target_W * h, axis=1)
+        self.cache = (h, target_W)
+        return out
+
+    def backward(self, dout):
+        h, target_W = self.cache
+        dout = dout.reshape(dout.shape[0], 1)
+
+        dtarget_W = dout * h
+        self.embed.backward(dtarget_W)
+        dh = dout * target_W
+        return dh
+```
+
+### 네거티브 샘플링
+
+지금까지는 옳은 답인 경우에 대해서만 학습을 시켜왔다. 네거티브 샘플링은 틀린 답까지 학습을 시켜 정답률을 더욱 증가시키는 방법이다.
+
+예를 들어, you와 goodbye 사이에 들어갈 단어가 say라는 것을 계속해서 학습시켜왔다면, say 외의 단어들은 정답이 아니라는 것까지 학습을 시키는 것이다.
+
+![](./images/fig 4-16.png)
+
+하지만 이 방법도 어휘수가 많아질수록 부정적인 예를 모두 학습하기에는 어려워진다. 그래서 틀린 답을 몇개만 골라서(샘플링) 학습시키는 방법을 추가 사용하게 되는데 이 아이디어를 차용한 기법이 바로 **네거티브 샘플링** 기법이다.
+
+즉, 네거티브 샘플링 기법을 정리하자면 아래와 같다 : 
+
+* 정답인 경우에 대한 손실 구하기
+* 오답인 경우를 몇 개 선별하여 그 대한 손실 구하기
+* 정답/오답인 경우의 손실을 더한 값을 최종 손실값으로 처리하기
+
+
+
+아래 예시는 정답(say)인 경우와 오답 샘플링(hello, I)의 경우로 학습하는 계산 그래프이다:
+
+정답인 say의 손실값, 오답인 hello, I의 손실값을 모두 더해 최종 Loss를 계산하고 있다.
+
+![](./images/fig 4-17.png)
+
+#### 네거티브 샘플링의 기법
+
+네거티브 샘플링 시, 최대한 많은 수의 오답을 학습하는 것이 성능에는 더 큰 도움이 되지만, 학습 환경 등에 대한 제약사항들로 최적의 개수를 선별하는 것이 좋다.
+
+학습시킬 오답을 선별하기 위해 무작위로 선별하는 것도 방법이겠지만 좋은 방법은 아니다.  그렇다면 적절한 오답을 선별하는 기법에는 어떤 것이 있을까? 
+
+* 단어의 확률분포를 기초로 샘플링하기 (단어 빈도) 
+
+  * 자주 등장하는 단어를 많이 추출, 드물에 등장하는 단어를 적게 추출 
+
+    ![](./images/fig 4-18.png)
+
+확률분포를 사용하여 단어를 샘플링하는 것을 파이썬 코드로 나타내보면 아래와 같다:
+
+```python
+p = [0.5, 0.1, 0.05, 0.2, 0.05, 0.1]
+np.random.choice(words, p=p)
+```
+
+이렇게 하면 확률분포대로 단어가 선정되기 때문에 편하게 네거티브 샘플링을 할 수 있다!
+
+하지만 이렇게되면 출현빈도가 적은 단어는 아예 선별되지 않기때문에 학습이 편향될 위험이 있다. 이를 보완하기 위해 네거티브 샘플링 기법에서는 기본 확률분포에 아래와 같이 0.75 제곱을 하도록 권장하고 있다.
+
+![](./images/e 4-4.png)
+
+0.75를 제곱함으로써 출현 확률이 낮은 단어의 확률을 살짝 올릴 수 있게 되기 때문이다:
+
+```python
+>>> p = [0.7, 0.29, 0.01]
+>>> new_p = np.power(p, 0.75)
+>>> new_p /= np.sum(new_p)
+>>> new_p
+array([0.64196878, 0.33150408, 0.02652714])
+```
+
+### 네거티브 샘플링 구현
 
