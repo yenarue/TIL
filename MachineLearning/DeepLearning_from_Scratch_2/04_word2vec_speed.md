@@ -259,3 +259,192 @@ array([0.64196878, 0.33150408, 0.02652714])
 
 ### 네거티브 샘플링 구현
 
+```python
+class NegativeSamplingLoss:
+    # W : 출력 측 가중치
+    # corpus : 말뭉치 (단어 ID 리스트)
+    # power : 확률분포에 제곱할 값
+    # sample_size : 부정적 예의 샘플링 횟수
+    def __init__(self, W, corpus, power=0.75, sample_size=5):
+        self.sample_size = sample_size
+        self.sampler = UnigramSampler(corpus, power, sample_size)
+        self.loss_layers = [SigmoidWithLoss() for _ in range(sample_size + 1)] # 부정적 예 계층 sample_size 개 + 긍정적 예 계층 1개
+        self.embed_dot_layers = [EmbeddingDot(W) for _ in range(sample_size + 1)]
+
+        self.params, self.grads = [], []
+        for layer in self.embed_dot_layers:
+            self.params += layer.params
+            self.grads += layer.grads
+
+    def forward(self, h, target):
+        batch_size = target.shape[0]
+        negative_sample = self.sampler.get_negative_sample(target)
+
+        # 긍정적 예 순전파
+        score = self.embed_dot_layers[0].forward(h, target)
+        correct_label = np.ones(batch_size, dtype=np.int32)
+        loss = self.loss_layers[0].forward(score, correct_label)
+
+        # 부정적 예 순전파
+        negative_label = np.zeros(batch_size, dtype=np.int32)
+        for i in range(self.sample_size):
+            negative_target = negative_sample[:, i]
+            score = self.embed_dot_layers[1 + i].forward(h, negative_target)
+            loss += self.loss_layers[1 + i].forward(score, negative_label)
+
+        return loss
+
+    # 순전파의 역순으로 각 계층을 호출하면 된다
+    def backward(self, dout=1):
+        dh = 0
+        for l0, l1 in zip(self.loss_layers, self.embed_dot_layers):
+            dscore = l0.backward(dout)
+            dh += l1.backward(dscore)
+        return dh
+```
+
+## 개선하기 - 3. 개선판 word2vec 학습
+
+위에서 구현해본 네거티브 샘플링 기법을 신경망 구현에 적용해보자!
+
+### CBOW 모델 구현
+
+```python
+import sys
+import numpy as np
+from layers import Embedding
+from ch04.negative_sampling_layer import NegativeSamplingLoss
+
+class CBOW:
+    # vocab_size : 어휘 수
+    # hidden_size : 은닉층의 뉴런 수
+    # corpus : 단어 ID 목록
+    # window_size : 맥락의 크기
+    def __init__(self, vocab_size, hidden_size, window_size, corpus):
+        V, H = vocab_size, hidden_size
+
+        # 가중치 초기화
+        W_in = 0.01 * np.random.randn(V, H).astype('f')
+        W_out = 0.01 * np.random.randn(V, H).astype('f')
+
+        # 계층 생성
+        self.in_layers = []
+        for i in range(2 * window_size):
+            layer = Embedding(W_in)
+            self.in_layers.append(layer)
+        self.ns_loss = NegativeSamplingLoss(W_out, corpus, power=0.75, sample_size=5)
+
+        layers = self.in_layers + [self.ns_loss]
+
+        # 모든 가중치와 기울기를 배열에 모은다
+        self.params, self.grads = [], []
+        for layer in layers:
+            self.params += layer.params
+            self.grads += layer.grads
+
+        # 인스턴스 변수에 단어의 분산 표현을 저장한다
+        self.word_vecs = W_in
+
+    # contexts (2차원), target (1차원) : 단어 ID
+    def forward(self, contexts, target):
+        h = 0
+        for i, layer in enumerate(self.in_layers):
+            h += layer.forward(contexts[:, i])
+        h *= 1 / len(self.in_layers)
+        loss = self.ns_loss.forward(h, target)
+        return loss
+
+    def backward(self, dout=1):
+        dout = self.ns_loss.backward(dout)
+        dout *= 1 / len(self.in_layers)
+        for layer in self.in_layers:
+            layer.backward(dout)
+        return None
+
+```
+
+### 학습
+
+```python
+import numpy as np
+from common import config
+
+import pickle
+from common.trainer import Trainer
+from optimizer import Adam
+
+from ch04.cbow import CBOW
+from common.util import create_contexts_target, to_cpu, to_gpu
+from dataset import ptb
+
+# 하이퍼 파라미터 설정
+window_size = 5
+hidden_size = 100
+batch_size = 100
+max_epoch = 10
+
+# 데이터 읽기
+corpus, word_to_id, id_to_word = ptb.load_data('train')
+vocab_size = len(word_to_id)
+
+contexts, target = create_contexts_target(corpus, window_size)
+if config.GPU:
+    contexts, target = to_gpu(contexts), to_gpu(target)
+
+# 모델 등 생성
+model = CBOW(vocab_size, hidden_size, window_size, corpus)
+optimizer = Adam()
+trainer = Trainer(model, optimizer)
+
+# 학습 시작
+trainer.fit(contexts, target, max_epoch, batch_size)
+trainer.plot()
+
+# 나중에 사용할 수 있도록 필요한 데이터 저장
+word_vecs = model.word_vecs
+if config.GPU:
+    word_vecs = to_cpu(word_vecs)
+params = {}
+params['word_vecs'] = word_vecs.astype(np.float16)
+params['word_to_id'] = word_to_id
+params['id_to_word'] = id_to_word
+pkl_file = 'cbow_params.pkl'
+with open(pkl_file, 'wb') as f:
+    pickle.dump(params, f, -1)
+```
+
+### 평가
+
+```python
+from common.util import most_similar
+import pickle
+
+pkl_file = 'cbow_params.pkl'
+
+with open(pkl_file, 'rb') as f:
+    params = pickle.load(f)
+    word_vecs = params['word_vecs']
+    word_to_id = params['word_to_id']
+    id_to_word = params['id_to_word']
+
+querys = ['you', 'year', 'car', 'toyota']
+for query in querys:
+    most_similar(query, word_to_id, id_to_word, word_vecs, top=5)
+```
+
+### 유추문제 풀어보기
+
+단어의 분산표현은 비슷한 단어를 모으는 것 뿐만 아니라 **유추 문제** 를 풀 수 있다.
+
+king - man + woman = queen 과 같은 유추문제를 풀 수 있다는 뜻이다! 이 문제를 그림으로 나타내보면 아래와 같다.
+
+![](./images/fig 4-20.png)
+
+위와 같이 man -> woman 벡터와 비슷한 방향을 보이는 king -> ? 의 벡터를 찾는 것이다.
+
+과거형, take : took = go : ? (went)
+
+비교급, good : better = bad: ? (worse)
+
+등과 같이 단어 사이의 관계를 유추할 수 있기 때문에 good ? best 순에서 ?가 better 임을 유추할 수도 있다. 
+
