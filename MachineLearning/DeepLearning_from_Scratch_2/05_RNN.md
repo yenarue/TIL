@@ -167,13 +167,129 @@ class RNN:
         t = np.matmul(h_prev, Wh) + np.matmul(x, Wx) + b
         h_next = np.tanh(t)
         
+        # h_prev : RNN 계층으로부터 받는 입력
+        # h_next : RNN 계층으로부터의 출력 (= 다음 시각 계층으로의 입력)
         self.cache = (x, h_prev, h_next)
         return h_next
+```
+
+역전파를 구현하기 전에, 순전파의 계산그래프를 그려보고 이를 참고하여 역전파를 그려보면 아래와 같다 :
+
+
+| RNN 순전파          | RNN 역전파  |
+| ------------------------ | -------------------------- |
+|![](./images/fig 5-19.png) | ![](./images/fig 5-20.png)|
+
+> 편향(b) 입력시에는 사실 덧셈 브로드캐스트가 일어나므로 Repeat 노드로 그려져야 하나, 여기서는 간략한 그림을 그리고자 생략하였다고 한다.
+
+역전파가 그려진 계산그래프를 그대로 코드로 옮겨보면 다음과 같다:
+
+```python
+    def backward(self, dh_next):
+        Wx, Wh, b = self.params
+        x, h_prev, h_next = self.cache
+
+        dt = dh_next * (1 - h_next ** 2) # tanh의 역전파 수식
+        db = np.sum(dt, axis=0)
+        dWh = np.matmul(h_prev.T, dt)
+        dh_prev = np.matmul(dt, Wh.T)
+        dWx = np.matmul(x.T, dt)
+        dx = np.matmul(dt, Wx.T)
+        
+        self.grads[0][...] = dWx
+        self.grads[1][...] = dWh
+        self.grads[2][...] = db
+        
+        return dx, dh_prev
 ```
 
 
 
 ### `TimeRNN` 구현
+
+T개의 RNN으로 구성된 계층인 `TimeRNN` 을 구현해보자!
+
+![](./images/fig 5-21.png)
+
+```python
+class TimeRNN:
+    def __init__(self, Wx, Wh, b, stateful=False):
+        self.params = [Wx, Wh, b]
+        self.grads = [np.zeros_like(Wx), np.zeros_like(Wh), np.zeros_like(b)]
+        self.layers = None
+
+        # h : forward 에서 마지막 RNN 계층의 은닉 상태를 저장
+        # dh : backward 에서 하나 앞 블록의 은닉 상태의 기울기를 저장
+        self.h, self.dh = None, None
+        self.stateful = stateful
+
+    def set_state(self, h):
+        self.h = h
+
+    def reset_state(self):
+        self.h = None
+
+    def forward(self, xs):
+        Wx, Wh, b = self.params
+        N, T, D = xs.shape
+        D, H = Wx.shape
+
+        self.layers = []
+        hs = np.empty((N, T, H), dtype='f')
+
+        if not self.stateful or self.h is None:
+            self.h = np.zeros((N, H), dtype='f')
+
+        for t in range(T):
+            layer = RNN(*self.params) # params 의 아이템들(Wx, Wh, b)을 RNN의 파라미터로 보내준다
+            self.h = layer.forward(xs[:, t, :], self.h)
+            hs[:, t, :] = self.h
+            self.layers.append(layer)
+
+        return hs
+```
+
+`stateful` 변수 값에 따라 은닉상태 h를 유지할지 아닐지를 결정한다.
+
+이제 역전파를 구현하기 위해 또 계산그래프를 살펴보자:
+
+|`TimeRNN` 전반적인 역전파 | `TimeRNN` 내부 (RNN계층 끼리의 역전파) |
+| -------------------------- | -------------------------- |
+| ![](./images/fig 5-23.png) | ![](./images/fig 5-24.png) |
+
+먼저 좌측의 그래프를 통해 전반적인 숲을 살펴보자. 지금은 Truncated BPTT 로 구현할 것이기 때문에 이 블록 이전 시각의 역전파는 필요하지 않다. 하지만 일단 계산된 기울기 값을 `dh` 변수에 저장해두기로 하자. (seq2seq 에 필요하기 때문)
+
+블록 내부에 흐르는 역전파를 확대한 우측의 그래프를 살펴보자. dhnext 로 부터 전해지는 기울기와 순전파에서 분기해서 나갔던 현재 RNN의 기울기 dht를 더해 현재 RNN에 입력되고있다.
+
+이를 바탕으로 역전파를 구현해보자:
+
+```python
+    def backward(self, dhs):
+        Wx, Wh, b = self.params
+        N, T, H = dhs.shape
+        D, H = Wx.shape
+        
+        # dxs : 하류로 흘러보낼 기울기
+        dxs = np.empty((N, T, D), dtype='f')
+        dh = 0
+        grads = [0, 0, 0]
+        for t in reversed(range(T)):
+            layer = self.layers[t]
+            dx, dh = layer.backward(dhs[:, t, :] + dh) # dhnext와 dh를 합산한 기울기
+            dxs[:, t, :] = dx # 현 시각의 기울기(dx)를 dxs의 해당 시각 인덱스에 저장
+            
+            for i, grad in enumerate(layer.grads):
+                grads[i] += grad
+        
+        # 각 RNN 계층의 기울기 (grad)를 합산하여 self.grads 에 저장
+        for i, grad in enumerate(grads):
+            self.grads[i][...] = grad
+        self.dh = dh
+        
+        return dxs
+```
+
+
 
 
 
