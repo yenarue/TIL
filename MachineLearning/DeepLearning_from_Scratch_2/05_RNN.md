@@ -291,6 +291,60 @@ class TimeRNN:
 
 
 
+## RNNLM (RNN Language Model)
+
+* RNNLM : RNN을 사용하는 언어 모델.
+
+지금까지는 RNN 계층에만 주목하여 시계열 데이터를 처리하는 것을 알아봤다. 이제부터는 RNN 을 사용하는 언어모델을 구현하기 위해, 다른 계층들에 대해서도 시계열 데이터를 처리하도록 만들어보겠다.
+
+![](./images/fig 5-25.png)
+
+위와 같이 실제 신경망을 그려보면, RNN 계층 뿐만 아니라 Embedding, Affine, Softmax 계층 또한 시각별로 존재하는 것을 알 수 있다. 더욱 직관적을로 알아 볼 수 있게 여기에 문장을 대입시켜보자.
+
+![](./images/fig 5-26.png)
+
+위와 같이 문장의 단어가 순서대로(시각별로) 들어간다. 특히, `say` 를 살펴보면, 결과값으로 `hello` 와 `goodbye` 가 도출되어있다.  `you say` 라는 맥락과 어울리는 단어 선택으로서 `you say` 라는 맥락을 기억하고 있다는 뜻이다 (실제로는 은닉상태벡터로 보관(기억)한다). 즉, 지금까지 입력된 단어를 '기억' 하고 그것을 바탕으로 다음에 출현할 단어를 '예측' 한다. 이는 RNN 계층이 이 정보를 Affine 계층으로 보내고 다음 RNN계층으로도 보내는 역할을 하기 때문에 가능한 것이다.
+
+### Time 계층 - T개의 시계열 데이터를 한꺼번에 처리하는 계층
+
+RNN 계층을 모아 TimeRNN을 만들었던 것 처럼, Embedding, Affine, Softmax 계층을 모아 TimeEmbedding, TimeAffine, TimeSoftmax 를 만들어보도록 하자.
+
+![](./images/fig 5-27.png)
+
+#### 1. Time Affine 계층
+
+![](./images/fig 5-28.png)
+
+#### 2. Time Embedding
+
+구조상으로, Time Affine 계층과 동일하게 구현하면 된다.
+
+#### 3. Time Softmax with Losdd 계층
+
+![](./images/fig 5-29.png)
+
+#### 구현
+
+Time 계층들에 대한 구현은 [샘플코드](https://github.com/yenarue/TIL-sample-projects/blob/master/DataScience/DeepLearning-from-Scratch-2/common/time_layers.py)를 확인하도록 하자. 
+
+### RNNLM 구현
+
+간단한 RNNLM으로서 `SimpleRnnlm` 을 구현해보자!
+
+![](./images/fig 5-30.png)
+
+
+
+```python
+
+```
+
+
+
+### RNNLM 학습
+
+### RNNLM 평가
+
 
 
 ## 참고자료
