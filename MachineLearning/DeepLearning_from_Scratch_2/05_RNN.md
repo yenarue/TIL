@@ -329,23 +329,187 @@ Time 계층들에 대한 구현은 [샘플코드](https://github.com/yenarue/TIL
 
 ### RNNLM 구현
 
-간단한 RNNLM으로서 `SimpleRnnlm` 을 구현해보자!
+간단한 RNNLM으로서 아래와 같이 4가지의 Time 계층들을 쌓은 `SimpleRnnlm` 을 구현해보자!
 
 ![](./images/fig 5-30.png)
 
-
-
 ```python
+import numpy as np
+from common.time_layers import *
 
+class SimpleRnnlm:
+    def __init__(self, vocab_size, wordvec_size, hidden_size):
+        V, D, H = vocab_size, wordvec_size, hidden_size
+        rn = np.random.randn
+
+        # 가중치 초기화
+        embed_W = (rn(V, D) / 100).astype('f')
+        rnn_b = np.zeros(H).astype('f')
+        affine_b = np.zeros(V).astype('f')
+        ## Xavier 초깃값을 이용하여 초기화
+        rnn_Wx = (rn(D, H) / np.sqrt(D)).astype('f')
+        rnn_Wh = (rn(H, H) / np.sqrt(H)).astype('f')
+        affine_W = (rn(H, V) / np.sqrt(H)).astype('f')
+
+        # 계층 생성
+        self.layers = [
+            TimeEmbedding(embed_W),
+            TimeRNN(rnn_Wx, rnn_Wh, rnn_b, stateful=True),	# Truncated BPTT
+            TimeAffine(affine_W, affine_b)
+        ]
+
+        self.loss_layer = TimeSoftmaxWithLoss()
+        self.rnn_layer = self.layers[1]
+
+        # 모든 가중치와 기울기를 리스트에 모은다
+        self.params, self.grads = [], []
+        for layer in self.layers:
+            self.params += layer.params
+            self.grads += layer.grads
+            
+    def forward(self, xs, ts):
+        for layer in self.layers:
+            xs = layer.forward(xs)
+        loss = self.loss_layer.forward(xs, ts)
+        return loss
+
+    def backward(self, dout=1):
+        dout = self.loss_layer.backward(dout)
+        for layer in reversed(self.layers):
+            dout = layer.backward(dout)
+        return dout
+    
+    # 신경망의 상태를 초기화 한다
+    def reset_state(self):
+        self.rnn_layer.reset_state()
 ```
 
-
-
-### RNNLM 학습
+> *  Xavier Initialization (사비에르 초깃값) : 이전노드와 다음노드의 개수에 의존하여 초기화하는 방법. 표준정규분포를 입력개수의 표준편차로 나눈다. sigmoid, tanh와 같은 비선형 함수에서 효과적이며 ReLU 함수에서 사용하게 되면 출력 값이 0으로 수렴하게 되므로 사용하지 말아야 한다.
+> *  언어 모델을 다루는 연구에서는 스케일을 변환한 균일분포를 이용하는 사례가 많다. (`0.01 *np.random.uniform(...)`)
 
 ### RNNLM 평가
 
+언어모델은 과거의 정보로 부터 다음에 출현할 단어의 확률 분포를 출력한다. 즉, 예측을 하는 것이다. 언어모델의 예측 성능을 평가하는 척도로서 **퍼플렉서티(perplexity, 혼란도)**가 자주 사용된다.
 
+#### 퍼플렉서티 (perplexity, 혼란도)
+
+간단하게 수식으로서 이해하자면 '확률의 역수'라고 볼 수 있다.
+
+![](./images/fig 5-32.png)
+
+위의 그림에서 모델2의 경우, 정답인 `say`의 확률이 0.2로 낮게 나오고 있다. 이 경우의 퍼플렉서티는 2/10의 역수인,  10/2 = 5 이다.  모델1의 경우에는 0.8의 확률을 보이고 있으며 이 경우의 퍼플렉서티는 8/10의 역수인, 10/8 = 1.25 이다. 즉, 퍼플렉서티는 값이 작을수록 더 좋다.
+
+확률과는 달리 정규화 되어있지 않기 때문에 절대값으로 출력된다. 그렇다면 이 값은 어떤의미로 해석될 수 있을까? 바로 다음에 출현할 수 있는 단어 후보의 수, 즉, **분기수(number of branches, 선택사항의 수)**로 해석될 수 있다. 
+
+분기수 관점에서 위의 모델1,2를 다시 살펴보자. 모델1의 경우 퍼플렉서티가 1.25이었다. 즉, `you` 다음에 출현할 단어의 수를 1.25개로 좁혔다는 뜻으로 해석할 수 있다. 모델2의 경우에는 퍼플렉서티가 5로서 `you` 다음에 출현할 단어의 수가 5개 정도로 불확실성이 높다는 뜻이 된다.
+
+위의 예시는 입력데이터가 1개인 경우의 이야기이다. 입력데이터가 여러개인 경우에는 아래의 공식에 따라 퍼플렉서티를 구한다.
+
+![](./images/e 5-12.png)
+
+![](./images/e 5-13.png)
+
+* N : 데이터의 총 개수
+* tn : 원핫 벡터로 나타낸 정답 레이블
+* tnk : n개째 데이터의 k번째 값
+* ynk : 확률분포 (ex. softmax의 출력)
+* L : 손실 (사실상 위의 식은 교차엔트로피오차(CSE) 식과 동일하다)
+* eL : 퍼플렉서티
+
+결론 : 퍼플렉서티가 작아질수록 분기 수가 줄어드니 더 좋은 모델이 된다!
+
+### RNNLM 학습
+
+1. 미니배치를 순차적으로 만든다
+2. 모델의 순전파와 역전파를 호출한다
+3. 옵티마이저로 가중치를 갱신한다
+4. 퍼플렉서티를 구한다
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+from common.optimizer import SGD
+from dataset import ptb
+from ch05.simple_rnnlm import SimpleRnnlm
+
+# 하이퍼 파라미터
+batch_size = 10
+wordvec_size = 100
+hidden_size = 100   # RNN의 은닉 상태 벡터의 원소 수
+time_size = 5       # Truncated BPTT가 한 번에 펼치는 시간 크기
+lr = 0.1
+max_epoch = 100
+
+# 학습 데이터 읽기
+corpus, word_to_id, id_to_word = ptb.load_data('train')
+corpus_size = 1000  # 1000개만 읽자
+corpus = corpus[:corpus_size]
+vocab_size = int(max(corpus) + 1)
+
+xs = corpus[:-1]    # 입력
+ts = corpus[1:]     # 출력(정답 레이블)
+data_size = len(xs)
+print('말뭉치 크기 : %d, 어휘 수 : %d' % (corpus_size, vocab_size))
+
+# 학습 시 사용하는 변수
+max_iters = data_size // (batch_size * time_size)
+time_idx = 0
+total_loss = 0
+loss_count = 0
+ppl_list = []
+
+# 모델 생성하기
+model = SimpleRnnlm(vocab_size, wordvec_size, hidden_size)
+optimizer = SGD(lr)
+
+# 각각의 미니 배치에서 데이터를 읽는 시작 위치를 조정하기 위해
+jump = (corpus_size -1 ) // batch_size
+offsets = [i * jump for i in range(batch_size)]
+
+for epoch in range(max_epoch):
+    for iter in range(max_iters):
+        # 미니 배치
+        batch_x = np.empty((batch_size, time_size), dtype='i')
+        batch_t = np.empty((batch_size, time_size), dtype='i')
+        # 순차적으로 데이터 읽기
+        for t in range(time_size):
+            for i, offset in enumerate(offsets):
+                batch_x[i, t] = xs[(offset + time_idx) % data_size]
+                batch_t[i, t] = ts[(offset + time_idx) % data_size]
+            time_idx += 1
+
+        # 기울기를 구하여 매개변수 갱신
+        loss = model.forward(batch_x, batch_t)
+        model.backward()
+        optimizer.update(model.params, model.grads)
+        total_loss += loss
+        loss_count += 1
+
+    # 각 epoch 마다 퍼플렉서티 계산하기
+    ppl = np.exp(total_loss / loss_count)
+    print('| 에폭 %d | 퍼플렉서티 %.2f' % (epoch + 1, ppl))
+    ppl_list.append(float(ppl))
+    total_loss, loss_count = 0, 0
+
+# 그래프 그리기
+x = np.arange(len(ppl_list))
+plt.plot(x, ppl_list, label='train')
+plt.xlabel('epochs')
+plt.ylabel('perplexity')
+plt.show()
+```
+
+학습 후 평가한 퍼플렉서티 값들을 에폭별로 그래프를 그려보면 아래와 같다.
+
+![](./images/simple_rnnlm_perplexity.png)
+
+학습을 진행할수록 퍼플렉서티가 순조롭게 낮아지고 있다! 성공적!
+
+하지만 이는 1000개의 데이터를 대상으로 학습한 것으로서 상대적으로 작은 크기의 말뭉치로 실험한 결과이다. 현재의 모델으로서는 크기가 큰 말뭉치에서는 큰 효과를 나타내지 못한다.
+
+## 마무리
+
+순환 신경망(RNN)은 데이터를 순환시킴으로써 과거 -> 현재 -> 미래로 데이터를 흘려보낸다. 이를 위해 '은닉 상태'를 기억하는 계층이 추가 되었다. 이러한 특징을 이용하여 언어모델을 만들어 보았다. 아무리 긴 시계열 데이터가 들어오더라도 중요 정보를 은닉 상태에 기억시킬 수 있게 되었다. 하지만 데이터가 커질수록 잘 학습하지 못하는 문제가 있다. 이를 극복하려면 어떻게 해야할까?
 
 ## 참고자료
 
