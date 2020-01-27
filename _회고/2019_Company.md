@@ -94,7 +94,7 @@
 
 ![](https://drive.google.com/uc?id=1shTQ9mtN6sISLy7VB-50gcWLrufuDCqO)
 
-그렇게 **'게이머를 위한 게임 테스트 플랫폼 앱, [포메스](https://play.google.com/store/apps/details?id=com.formakers.fomes)'**와 **'게임사를 위한 크라우드 사용자 테스트 플랫폼, [포메이커스](https://formakers.net)'**가 탄생하였고, 2019년 초중반쯤 베타서비스를 런칭했다.
+그렇게 **'게이머를 위한 게임 테스트 플랫폼 앱, [포메스](https://play.google.com/store/apps/details?id=com.formakers.fomes)' **와 **'게임사를 위한 크라우드 사용자 테스트 플랫폼, [포메이커스](https://formakers.net)'** 가 탄생하였고, 2019년 초중반쯤 베타서비스를 런칭했다.
 
 게임으로 줌인(Zoom-In)하게된 이후인 지금도 여전히 우리 팀은 여전히 '데이터'의 힘을 믿고있다. 데모그라픽 정보보다는 실제 행동 데이터가 좀 더 특정인을 잘 설명해준다고 생각하고 그것에 집중하고 있다. 누가 피드백을 논리적으로 일목요연하게 작성하시는지, 누가 분석적인 피드백을 작성하셨는지는 데모그라픽 정보가 판단하지 않는다. 피드백 그 자체와 행동 데이터 그 자체가 그것을 보여준다.
 
@@ -135,6 +135,8 @@
 ---
 
 우리는 2019년 중반쯤부터 플랫폼을 런칭하고 2019년 12월까지 총 70개의 게임과 함께 했다.
+
+![](https://drive.google.com/uc?id=1r8RPCFy-MXF3p6YIieTVl_BGMKidh9zi)
 
 > 딴소리) 관련하여 우리도 2019년 연말 시상식을 한번 해봤다ㅎㅎ : https://www.notion.so/180fa1fdb92141298697e053232a7530
 
