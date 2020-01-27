@@ -4,4 +4,7 @@
 
 
 
+## Animated TextView
+
 * FadingTextView : https://github.com/rosenpin/fading-text-view
+* HTextView : https://github.com/hanks-zyh/HTextView
