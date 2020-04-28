@@ -1,6 +1,9 @@
 # Vue.js - 이벤트
 
+* 작성일 : 2017년 11월 11일
+
 ## 이벤트 처리
+
 이벤트 핸들링은 다음과 같이 이루어진다.
 ```html
 <div id="clickme" v-on:click="onClick"></div>

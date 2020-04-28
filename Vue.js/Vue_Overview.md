@@ -1,6 +1,9 @@
 # Vue.js
 
+* 작성일 2017년 10월 31일
+
 ## 개요
+
 **Vue.js**는 SPA(Single Page Application, 단일 페이지 애플리케이션) 아키텍처 기반으로 만들어진 프론트엔드 자바스크립트 프레임워크이다.
 MVVM 패턴을 따르고 있다. 
 ![](https://cdn-images-1.medium.com/max/800/1*Lu6OJiraJYShl4aBppoh3w.png)
@@ -150,6 +153,7 @@ v-if와 함께 쓰면 용이할 듯 하다.
 #### v-cloak
 화면 초기에 컴파일 되지 않은 템플릿은 나타나지 않도록 한다.
 데이터 양이 증가하면 컴파일 시간이 길어져서 {{}}와 같은 Vue의 표현식이 UI에 그대로 노출되는 경우가 생긴다. 복잡한 UI일 경우 더욱 빈번하게 발생한다. 그럴때 `v-cloak`을 사용하면 된다.
+
 ```xml
 <head>
   <style>
@@ -202,5 +206,5 @@ var vm = new Vue({
 
 ## 트리비아
 * IntelliJ IDEA의 Community 버전에서는 nodejs 플러그인을 찾을 수 없다. 커뮤니티 버전은 자바스크립트를 지원하지 않기때문.. (너무해) JetBrain쪽 IDE를 쓰고싶다면 걍 첨부터 웹스톰을 쓰도록하자. (30분 강제 뽀모도르 개이득)
-* VS Code도 사용하기 좋은 듯 하다. 더 사용해보고 괜찮으면 넘어가야겠다.
+* VS Code : 플러그인이 많아서 개이득. 더 사용해보고 괜찮으면 넘어가야겠다.
 * [Airbnb ESLint를 끼워보자](https://www.themarketingtechnologist.co/eslint-with-airbnb-javascript-style-guide-in-webstorm/)
