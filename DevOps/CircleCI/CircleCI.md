@@ -1,4 +1,4 @@
-gCircleCI
+CircleCI
 =====
 
 [번역중...](https://medium.com/@ayushigupta_2225/continuous-integration-and-deployment-through-circle-ci-fbe56ea316dc)
