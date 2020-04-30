@@ -105,7 +105,7 @@ new Vue({
 ## Component
 
 * [강의자료](https://joshua1988.github.io/vue-camp/vue/components.html)
-* Vue.js 공식 가이드 자료 - 컴포넌트
+* [Vue.js 공식 가이드 자료 - 컴포넌트]([https://kr.vuejs.org/v2/guide/components.html#%EC%BB%B4%ED%8F%AC%EB%84%8C%ED%8A%B8%EA%B0%80-%EB%AC%B4%EC%97%87%EC%9D%B8%EA%B0%80%EC%9A%94](https://kr.vuejs.org/v2/guide/components.html#컴포넌트가-무엇인가요))
 
 ### 아이디어) 데이터는 단방향으로 보내자
 
@@ -272,7 +272,7 @@ Vue 개발자도구의 이벤트 탭으로 이동하면 위와 같이 실제 발
 
 ![](../images/vue-component-event.png)
 
-사실 이러한 방식에는 함정이 하나 있다. 컴포넌트 트리의 깊이(Depth)가 깊어지면 깊어질수록 이벤트를 계속 전달전달 해야한다는 점이다. source component에서 destination component 까지 도달하는 중간에 있는 수많은 component들에서 문제가 되는 것이다. 아니, 그저 이벤트와 데이터를 전달전달(by-pass)만 해주는 코드들이 들어가게 될 것이고 그로인해 중복코드가 엄청 늘어나게 될 것임 => 이때가 바로 **Vuex 가 필요한 타이밍**
+사실 이러한 방식에는 함정이 하나 있다. 컴포넌트 트리의 깊이(Depth)가 깊어지면 깊어질수록 이벤트를 계속 전달전달 해야한다는 점이다. source component에서 destination component 까지 도달하는 중간에 있는 수많은 component들에서 문제가 되는 것이다. 그저 이벤트와 데이터를 전달전달(by-pass)만 해주는 코드들이 들어가게 될 것이고 그로인해 중복코드가 엄청 늘어나게 될 것임 => 이때가 바로 **Vuex 가 필요한 타이밍**
 
 Vuex에 대해서는 투비컨티뉴
 
