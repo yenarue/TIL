@@ -1,10 +1,10 @@
 # Vue.js 정복 캠프 6기
 
-출석번호 : 3215
-
 * [강의 자료](https://joshua1988.github.io/vue-camp/)
 
 * [강의 GitHub Repository](https://github.com/joshua1988/vue-camp)
+
+
 
 
 
@@ -17,6 +17,7 @@
 - [Visual Studio Code](https://code.visualstudio.com/)
 - [Node.js LTS 버전(v10.x 이상)](https://nodejs.org/ko/)
 - [Vue.js Dev Tools](https://chrome.google.com/webstore/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
+  - 프레임워크를 사용했을때 가장 이득인 부분... 개발자도구 강려크
 - [Windows] cmder
 
 ## VSCode 플러그인 목록
