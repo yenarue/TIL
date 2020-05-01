@@ -65,7 +65,7 @@ Vue.use(VueAnalytics, {
 
 당황하지 않고 공식문서를 다시 살펴보았다.
 
-![vue-analytics-warn](/Users/yenarue/OneDrive/Developer/TIL/Vue.js/images/vue-analytics-warn.png)
+![vue-analytics-warn](../images/vue-analytics-warn.png)
 
 이제서야 눈에 들어오는 경고메세지! 😳
 
@@ -123,11 +123,11 @@ Vue.use(VueGtag, {
 
 이름에서도 알 수 있듯이, 구글에서 직접 제작하고 제공하는 것이라 안정적이고 왠지 신뢰가 간다. ~~(물론 구글이기에 소리소문없이 없어질 가능성도 크지만....)~~
 
-![google-tag-assistant-store](/Users/yenarue/OneDrive/Developer/TIL/Vue.js/images/google-tag-assistant-store.png)
+![google-tag-assistant-store](../images/google-tag-assistant-store.png)
 
 [크롬 웹 스토어에서 다운로드](https://chrome.google.com/webstore/detail/tag-assistant-by-google)하여 설치하면 주소창 우측 상단에 태그 어시스트가 생겨난다.  
 
-![google-tag-assistant-usage](/Users/yenarue/OneDrive/Developer/TIL/Vue.js/images/google-tag-assistant-usage.png)
+![google-tag-assistant-usage](../images/google-tag-assistant-usage.png)
 
 gtag가 적용된 웹페이지에 접속한 뒤 태그 어시스턴트를 클릭해보면 이렇게 어떤 태그가 어떻게 적용되어있는지 표시된다. 아주 편리한 기능이 아닐 수 없다ㅎㅎ
 
