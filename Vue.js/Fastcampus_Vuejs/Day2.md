@@ -278,6 +278,7 @@ Vuex에 대해서는 투비컨티뉴
 
 ## Template
 
+* [강의자료](https://joshua1988.github.io/vue-camp/vue/template.html)
 * 데이터 바인딩 : ``{{ 데이터 }}`, `<something v-bind:속성명="데이터모델"></something>`
   * 데이터 모델을 참조하여 실시간으로 변경되는 2way binding
 * 디렉티브 : `<something v-on:이벤트></something>` , `v-model` 등....
