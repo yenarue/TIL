@@ -204,7 +204,12 @@ var vm = new Vue({
 ## Vue 인스턴스의 라이프 사이클
 ![](https://kr.vuejs.org/images/lifecycle.png)
 
+* created : 컴포넌트가 생성되자ㅏ마자 실행되는 로직
+* beforeMount : template에 정의한 코드가 함수로 변환되고 나서 실행되는 로직
+* mounted : 실제로 화면에 붙여진다
+
 ## 트리비아
+
 * IntelliJ IDEA의 Community 버전에서는 nodejs 플러그인을 찾을 수 없다. 커뮤니티 버전은 자바스크립트를 지원하지 않기때문.. (너무해) JetBrain쪽 IDE를 쓰고싶다면 걍 첨부터 웹스톰을 쓰도록하자. (30분 강제 뽀모도르 개이득)
 * VS Code : 플러그인이 많아서 개이득. 더 사용해보고 괜찮으면 넘어가야겠다.
 * [Airbnb ESLint를 끼워보자](https://www.themarketingtechnologist.co/eslint-with-airbnb-javascript-style-guide-in-webstorm/)
