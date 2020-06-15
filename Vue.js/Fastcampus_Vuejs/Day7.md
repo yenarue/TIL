@@ -3,10 +3,19 @@
 출석번호 : 8599
 
 * [강의 자료](https://joshua1988.github.io/vue-camp/)
-
 * [강의 GitHub Repository](https://github.com/joshua1988/vue-camp)
-
 * [Vue Coding Convention](https://vuejs.org/v2/style-guide/)
+
+## 7회차 수업 자료 안내
+
+- [brutal lifecycle of js frameworks](https://stackoverflow.blog/2018/01/11/brutal-lifecycle-javascript-frameworks/)
+- [slot 글](https://joshua1988.github.io/vue-camp/reuse/slots.html#슬롯-코드-형식)
+- [뷰 공식 스타일 가이드 - 인스턴스 옵션 속성 순서](https://vuejs.org/v2/style-guide/#Component-instance-options-order-recommended)
+- [뷰엑스 공식 문서](https://vuex.vuejs.org/)
+- [Vue.js SEO Tips](https://www.digitalocean.com/community/tutorials/vuejs-vue-seo-tips)
+- [Prerendering SEO Guide](https://vuejs-templates.github.io/webpack/prerender.html)
+
+## 8회차 수업 자료 안내
 
 # Vuex
 

@@ -24,7 +24,18 @@
 * [최신 브라우저의 내부 살펴보기 1 - CPU, GPU, 메모리 그리고 다중 프로세스 아키텍처](https://d2.naver.com/helloworld/2922312)
 * [웹팩 핸드북](https://joshua1988.github.io/webpack-guide/)
 
+## 2회차 수업 자료 안내
 
+- [Bootstrap](https://getbootstrap.com/docs/4.4/getting-started/introduction/)
+- [Materialize CSS](https://materializecss.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Vuetify](https://vuetifyjs.com/ko/)
+- [MDN Object.freeze](https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Global_Objects/Object/freeze)
+- [페이스북 해커 웨이 MVC 패턴 문제 소개 영상](https://www.youtube.com/watch?v=nYkdrAPrdcw)
+- [Vue.js Reactivity 관련 주의 사항 안내 문서](https://vuejs.org/v2/guide/reactivity.html#ad)
+- [자바스크립트 this 관련 글](https://joshua1988.github.io/vue-camp/js/this.html)
+- [자바스크립트 비동기 처리 글](https://joshua1988.github.io/web-development/javascript/javascript-asynchronous-operation/)
+- [자바스크립트 Promise 글](https://joshua1988.github.io/web-development/javascript/promise-for-beginners/)
 
 # 본강의
 

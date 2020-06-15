@@ -7,6 +7,20 @@
 
 
 
+## 5회차 수업 자료 안내
+
+- [Todo App 배포한 리포지토리(강사용)](https://github.com/joshua1988/todo-app1)
+- [serve 서버 라이브러리](https://github.com/zeit/serve)
+- [Continous Delivery Tool - Bamboo](https://www.atlassian.com/ko/software/bamboo/features)
+- [Continuous Integration Tool - Jenkins](https://www.jenkins.io/)
+- [Can I Use?](https://caniuse.com/)
+- [const mdn](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const)
+- [Javascript this](https://joshua1988.github.io/vue-camp/js/this.html)
+- [e2e Testing Tool - Cypress](https://www.cypress.io/)
+- [웹팩 가이드 - 브라우저 요청 숫자 제약](https://joshua1988.github.io/webpack-guide/motivation/problem-to-solve.html#브라우저별-http-요청-숫자의-제약)
+- [gulp - web task manager](https://gulpjs.com/)
+- [Babel](https://babeljs.io/docs/en/usage)
+
 
 
 https://caniuse.com/

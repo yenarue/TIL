@@ -12,6 +12,17 @@
 
 * [퍼블리셔에서 프론트엔드 개발자로 넘어갈 때애 알아두면 좋을 내용들](https://joshua1988.github.io/vue-camp/front-dev.html)
 
+## 3회차 수업 자료 안내
+
+- [Vue Template Explorer](https://template-explorer.vuejs.org/)
+- [HTTP 프로토콜 정리 글](https://joshua1988.github.io/web-development/http-part1/)
+- [axios github](https://github.com/axios/axios)
+- [자바스크립트 동작 원리](https://joshua1988.github.io/web-development/translation/javascript/how-js-works-inside-engine/)
+- [npm](https://www.npmjs.com/)
+- [데스크탑 앱 제작 프레임워크 Electron](https://www.electronjs.org/)
+- [배포한 뷰 애플리케이션 URL 접속이 잘 안될 때 살펴볼 글](https://router.vuejs.org/guide/essentials/history-mode.html#example-server-configurations)
+- [Vue.js 공식 스타일 가이드](https://kr.vuejs.org/v2/style-guide/index.html)
+
 # 본강의
 
 * 렌더링 코드로 변환되는 것을 직접 확인해볼 수 있는 사이트 : [Vue Template Explorer]([https://template-explorer.vuejs.org/#%3Cdiv%20id%3D%22app%22%3E%7B%7B%20msg%20%7D%7D%3C%2Fdiv%3E](https://template-explorer.vuejs.org/#{{ msg }}<%2Fdiv>))
