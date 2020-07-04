@@ -141,3 +141,61 @@ We could turn this example into a classification problem by instead making our o
 
 
 ## 비지도 학습 (Unsupervised Learning)
+
+지도 학습과는 달리 "정답"이 주어지지 않고 "데이터"만 주어진다. 데이터의 구성에서 어떤 형태나 특징을 찾아내어 군집(Cluster, 클러스터)화 하여 스스로 답을 유추하여 학습하도록 한다.
+
+| 지도학습                                  | 비지도학습                                      |
+| ----------------------------------------- | ----------------------------------------------- |
+| ![](./images/supervised_learning_two.png) | ![](./images/unsupervised_learning_cluster.png) |
+
+위 그래프 중 비지도 학습 그래프를 살펴보자. 뭔가 패턴을 찾을 수 있는데 바로 2개의 클러스터로 묶일 수 있다는 점이다. 비지도 학습 알고리즘은 이 데이터를 두가지 서로 다른 클러스터로 구분 지을 수 있다. => 클러스터링 알고리즘
+
+### 클러스터링 (Clustering) 예시 
+
+#### 구글 뉴스
+
+연관성 있는 기사들끼리 묶어서 보여준다.
+
+![](./images/unsupervised_learning_example_google_news.png)
+
+#### 사람의 유전자 정보
+
+여러 사람들의 유전자 정보를 입력하였을 때, 비슷한 유전자의 패턴을 묶어서 각 사람들을 서로 다른 분류 또는 타입으로 분류할 수 있다.
+
+![](./images/unsupervised_learning_example_genes.png)
+
+#### 그 외 예시
+
+* 컴퓨팅 클러스터 구조화하기
+* 소셜 네트워크 분석하기 (인간관계 그룹으로 나누기)
+* 시장 세분화 (Market Segmentation) : 판매 데이터 & 고객 데이터를 이용해 그룹화하고 자동으로 세분화된 시장을 찾아내어 타겟 마케팅
+* 천문학 데이터 분석
+
+### 비 클러스터링 (non-Clustering) 예시
+
+#### 칵테일 파티 문제 (Cocktail party problem)
+
+칵테일 파티처럼 여러 사람들이 모여 이야기를 나누는 상황속에서는 발화자를 구분해내기 쉽지 않다. 이처럼 데이터가 섞여 혼란스러운 환경속에서 규칙이나 구조를 찾아내야하는 문제를 "칵테일 파티 문제"라고 하는데, 이 문제도 비지도 학습으로 풀 수 있다.
+
+![](./images/unsupervised_learning_example_cocktail_party_problem.png)
+
+두개의 마이크에서 동시 녹음을 한 뒤, 비지도 학습을 이용하여 발화자를 구분한다.
+
+> 내 생각 : 약간 인간의 눈이 2개이기 때문에 깊이를 구별할 수 있는 것과 비슷한 느낌..
+
+같은 방식으로, 배경음악과 사람 목소리를 구분하는 것도 가능하다.
+
+### 구현 방법
+
+비지도 학습을 구현하기 위해서는 굉장히 복잡한 알고리즘이 필요할 것 처럼 보이겠지만, 사실 아래의 수식 하나로 가능하다.
+
+```
+[W,s,v] = svd((repmat(sum(x. * x, 1), size(x, 1), 1). * x) * x');
+```
+
+* [Octave](https://www.gnu.org/software/octave/)
+* [SVD (Singualr Value Decomposition, 특이값 분해)]([https://ko.wikipedia.org/wiki/%ED%8A%B9%EC%9D%B4%EA%B0%92_%EB%B6%84%ED%95%B4](https://ko.wikipedia.org/wiki/특이값_분해))
+  * 예전에 특이값분해에 대해 이해할 때 도움이 크게 되었던 [포스팅](https://angeloyeo.github.io/2019/08/01/SVD.html)
+
+
+
