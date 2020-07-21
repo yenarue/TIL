@@ -4,9 +4,7 @@ Coursera의 유명 강의, Andrew Ng 교수님의 Machine Learning 를 들으며
 
 # Machine Learning
 
-인공지능 분야에서 발전하여 파생되어 나온 분야이다.
-
-컴퓨터에 새로운 능력을 불어넣고 있다. (New capability for computers)
+기계학습(Machine Learning)은 인공지능 분야에서 발전하여 파생되어 나온 분야로서 컴퓨터에 새로운 능력을 불어넣고 있다 (New capability for computers).
 
 * 기초과학, 산업 여러분야에서 활용된다
 * 기계학습이 필요한 분야가 점차 확산되고 있다
@@ -28,9 +26,7 @@ Coursera의 유명 강의, Andrew Ng 교수님의 Machine Learning 를 들으며
 
 ## What is Machine Learning?
 
-"기계학습"에 대한 판별 기준에 대한 합의가 아직 이루어지지 않았다.
-
-대신, 그 동안 제시된 정의들을 하나씩 살펴보자:
+기계학습이란 무엇일까? 사실 "기계학습"에 대한 판별 기준에 대한 합의가 아직 이루어지지 않았다. 그 대신, 그 동안 제시된 정의들을 하나씩 살펴보자:
 
 *  Arthur Samuel (1959) - "기계학습이란, 컴퓨터가 명시적(explicit) 프로그램이 없어도 스스로 학습할 수 있는 능력을 연구하는 학문 분야이다"
   * 약간 오래된 느낌의 정의 (전통적 정의)

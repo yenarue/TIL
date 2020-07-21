@@ -22,6 +22,15 @@
 
 
 
+### 사용한 프로그램들
+
+* [MATLAB Online](https://matlab.mathworks.com/)
+* [MATLAB Drive](https://drive.matlab.com/files/)
+* [GNU Octave]()
+* [Octave Online](https://octave-online.net/)
+
+
+
 ### 업로드한 포스팅
 
 * [Machine Learning - Supervised Learning (지도 학습) & Unsupervised Learning (비지도 학습)]()
@@ -36,3 +45,5 @@
 * [http://www.kwangsiklee.com/2017/07/corsera-machine-learning-week1-%EC%A0%95%EB%A6%AC/](http://www.kwangsiklee.com/2017/07/corsera-machine-learning-week1-정리/)
 * https://www.slideshare.net/freepsw/coursera-machine-learning-by-andrew-ng
 * http://blog.naver.com/PostView.nhn?blogId=skkong89&logNo=220620131219
+
+* https://github.com/AvaisP/machine-learning-programming-assignments-coursera-andrew-ng
