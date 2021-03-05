@@ -238,6 +238,353 @@ store.dispatch(addItem("아이템이름2"))
 
 # 리액트 리덕스 (`react-redux`)
 
+`react-redux` 를 사용하기 전에 스토어를 직접 사용하는 것을 먼저 접해보즈아
+
+## 1. 명시적으로 스토어 전달해보기
+
+스토어를 컴포넌트 트리의 프로퍼티로서 명시적으로 UI에 전달해보자
+
+* 단순하고 컴포넌트의 개수가 적은 앱에서 잘 동작할 것임
+
+```react
+// import 구문 생략
+const store = storeFactory()
+const render = () =>
+	ReactDOM.render(
+    <App store={store}/>, // App을 렌더링할 때 스토어를 프로퍼티로 전달
+    document.getElementById('react-container')
+  )
+store.subscribe(render) // 스토어가 변경될 때마다 렌더링
+render()
+```
+
+store를 App에 넘겼다. App의 자식 컴포넌트가 store를 사용해야 하면 자식 컴포넌트에게도 store를 프로퍼티로 전달해줘야한다:
+
+```react
+// import 구문 생략
+
+// 프로퍼티에서 가져온 스토어를 모든 자식 컴포넌트에게 명시적으로 전달
+const App = ({ store }) =>
+	<div className="app">
+  	<SortMenu store={store} />
+  	<AddColorForm store={store} />
+    <ColorList store={store} />
+  </div>
+export default App
+```
+
+각 자식 컴포넌트들은 필요한 액션을 import 하고 이 스토어를 통해 dispatch 하며 활용할 것임 : 
+
+```react
+// [AddColorForm 컴포넌트]
+// import 구문 생략
+
+const AddColorForm = ({ store }) => {
+  let _title, _color
+  const submit = e => {
+    e.preventDefault()
+    store.dispatch(addColor(_title.value, _color.value))
+    _title.value = ''
+    _color.value = '#000000'
+    _title.focus()
+  }
+  
+  // Form이 submit되면 ADD_COLOR 액션을 dispatch
+  return (
+  	<form className="add-color" onSubmit={submit}>
+    	<input ref={input => _title = input}
+        type="text" placeholder="색 이름..." required/>
+      <input ref={input => _color = input}
+        type="color" required/>
+      <button>추가</button>
+    </form>
+  )
+}
+
+AddColorForm.propTypes = {
+  store: PropTypes.object
+}
+
+export default AddColorForm
+```
+
+```react
+// [ColorList 컴포넌트]
+// import 구문 생략
+
+const ColorList = ({store}) => {
+  const { colors, sort } = store.getState() // 스토어에서 색 목록 GET
+  const sortedColors = [...colors].sort(sortFunction(sort)) // 색 복사본 생성
+  return (
+    <div clasName="color-list">
+    	{
+        (colors.length === 0) ? 
+	      	<p>텅 비었어요! 색상을 추가하세요!</p> : 
+  	    	sortedColors.map(color => 
+             <Color key={color.id}
+               {...color}
+               onRate={(rating) => 
+                             store.dispatch(
+                             	rateColor(color.id, rating)
+                             )
+                      }
+               onRemove={() => 
+                             store.dispatch(
+                             	removeColor(color.id)
+                             )
+                      } />
+          )
+      }
+    </div>
+  )
+}
+
+ColorList.propTypes = {
+  store: PropTypes.object
+}
+
+export default ColorList
+```
+
+* 컴포넌트 트리가 작은 경우에는 무리 없이 잘 동작함
+* 스토어를 자식 컴포넌트에 명시적으로 전달하다보니 생기는 단점들이 있음 : 
+  * 코드가 더 길어진다
+  * 이해하기 어려워진다 (계속 스토어를 전달해야 하니 기억해둬야함)
+  * 해당 스토어에 디펜던시가생겨 자식 컴포넌트들을 다른 앱에 재활용하기 어려워진다
+* => 결국 어느 컴포넌트에만 상태를 전달하고 싶은 경우에도 App부터 그 컴포넌트까지 도달하기 위해 연결된 모든 컴포넌트에 스토어를 다 전달해줘야 함 => 전달..전달..전달.. 전달의 향연...
+
+## 2. [컨텍스트](https://ko.reactjs.org/docs/context.html)를 통해 묵시적으로 스토어 전달해보기
+
+React의 컨텍스트를 이용하면 스토어를 '묵시적으로' 전달할 수 있다. 즉, 중간에 연결된 컴포넌트에 일일이 전달해 줄 필요 없이 스토어가 필요한 컴포넌트에 바로 전달할 수 있음 (사실은 그렇게 보여지는 것이겠지만)
+
+
+
+우선 App 컴포넌트를 리팩토링해야한다 : 
+
+* 스토어를 구독하고 상태가 바뀔 때 마다 UI를 갱신하도록 한다 => Componet를 상속하여 mount 콜백, render 함수를 구현하자
+
+```react
+class App extends Component {
+  // 마운트시 스토어 구독
+  componentWillMount() {
+    this.unsubscribe = store.subscribe(
+    	() => this.forceUpdate()	// 상태 업뎃시마다 컴포넌트 트리 업뎃
+    )
+  }
+
+  // 언마운트시 구독해제
+  componentWillUnMount() {
+    this.unsubscribe()
+  }
+  
+  render() {
+    const { colors, sort } = store.getState()
+    const sortedColors = [...colors].sort(sortFunction(sort))
+    return (
+      	<div className="app">
+  				<SortMenu />
+			  	<AddColorForm />
+			    <ColorList colors={sortedColors} />
+			  </div>
+    )
+  }
+  
+  // Context 를 정의하는 객체를 반환
+  getChildContext() {
+    return {
+      store: this.props.store	 // 프로퍼티에 정의된 스토어를 컨텍스트에 추가
+    }
+  }
+}
+
+App.propTypes = {
+  store: PropTypes.object.isRequired
+}
+
+// 컨텍스트 객체 정의
+App.childContextTypes = {
+  store: PropTypes.object.isRequired
+}
+
+export default App
+```
+
+* 자식 컴포넌트들(SortMenu, AddColorForm, ColorList)은 모두 컨텍스트를 통해서 스토어에 접근할 수 있다 => `store.getState()` 와 같이 직접접근 가능
+* App 컴포넌트에서 스토어를 구독하고 있으므로 `index.js` 안에 있던 스토어 구독구문 삭제 가능
+
+```react
+// [AddColorForm 컴포넌트]
+// import 구문 생략
+														// 컨텍스트는 두번째 인자로 전달됨
+const AddColorForm = (props, { store }) => {
+  let _title, _color
+  const submit = e => {
+    e.preventDefault()
+    store.dispatch(addColor(_title.value, _color.value))
+    _title.value = ''
+    _color.value = '#000000'
+    _title.focus()
+  }
+  
+  // Form이 submit되면 ADD_COLOR 액션을 dispatch
+  return (
+  	<form className="add-color" onSubmit={submit}>
+    	<input ref={input => _title = input}
+        type="text" placeholder="색 이름..." required/>
+      <input ref={input => _color = input}
+        type="color" required/>
+      <button>추가</button>
+    </form>
+  )
+}
+
+// 기존 : propTypes
+// contextTypes은 필수로 정의되어야 함
+AddColorForm.contextTypes = {
+  store: PropTypes.object
+}
+
+export default AddColorForm
+```
+
+```react
+// [Color 컴포넌트]
+// import 구문 생략
+
+class Color extends Component {
+  render() {
+    const { id, title, color, rating, timestamp } = this.props
+    const { store } = this.context // 컴포넌트 클래스에서는 이렇게 접근 가능
+    render(
+      <div>
+        <!-- 중략... -->
+        <button onClick={() => store.dispatch(removeColor(id))}></button>
+      </div>
+    )
+  }
+}
+
+// 필수
+Color.contextTypes = {
+  store: PropTypes.object
+}
+
+Color.propTypes = {
+  id: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  color: PropTypes.string.isRequired,
+  rating: PropTypes.number
+}
+
+Color.defaultProps = {
+  rating: 0
+}
+
+export default Color
+```
+
+* 확실히 이전보다 훨씬 나아지긴 했다!
+* 하지만 각 컴포넌트들이 리덕스 스토어와 직접 상호작용하면서 UI를 렌더링 하고 있다
+  * => **스토어를 UI 렌더링 컴포넌트와 분리**하여 아키텍처 개선 가능
+
+## 표현 컴포넌트 vs 컨테이너 컴포넌트 (Presentational Component vs Container Component)
+
+* 관련문서 : [Presentational and Container Component](https://medium.com/@dan_abramov/smart-and-dumb-components-7ca2f9a7c7d0)
+  * 한글 번역본 : https://medium.com/@seungha_kim_IT/presentational-and-container-components-%EB%B2%88%EC%97%AD-1b1fb2e36afb
+
+### 표현 컴포넌트 (Presentational Component)
+
+UI를 렌더링하는 컴포넌트. 정말 딱 렌더링만 한다. View에 해당한다.
+
+* 데이터와 분리되어있어 다른 데이터를 활용하는 경우에도 재활용 가능
+* 쉽게 교체 가능
+* 쉽게 테스트 가능
+* 표현 컴포넌트들 합성해서 새로운 UI 도 만듬
+
+### 컨테이너 컴포넌트 (Container Component)
+
+표현 컴포넌트와 데이터를 연결해주는 컴포넌트.
+
+컨텍스트에서 스토어를 꺼내 스토어와의 모든 상호작용을 처리.
+
+표현 컴포넌트의 프로퍼티를 State와 연결 + 콜백 함수 프로퍼티를 Store dispatch에 연결 => 표현 컴포넌트 렌더링
+
+UI 엘리먼트에는 관여하지 않음. 표현 컴포넌트랑 데이터만 연결연결!
+
+### 아까 그 코드들 리팩토링 해보자
+
+* 표현 컴포넌트
+  *  `AddColorForm`, `ColorList`, `SortMenu`, `Color`, `StarRating`, `Star` 컴포넌트
+* 컨테이너 컴포넌트
+  * `SortMenu` 와 데이터를 연결하는 `Menu` 컴포넌트
+  * `AddColorForm` 와 데이터를 연결하는 `NewColor`  컴포넌트
+  * `ColorList ` 와 데이터를 연결하는 `Colors` 컴포넌트
+
+```react
+render() {
+  return (
+    <div className="app">
+      <Menu />
+      <NewColor />
+      <Colors />
+    </div>
+  )
+}
+```
+
+```react
+import AddColorForm from './ui/AddColorForm'
+import SortMenu from './ui/SortMenu'
+import ColorList from './ui/ColorList'
+// 모든 액션 생성기를 임포트해서 사용한다 => 모든 리덕스의 기능들이 이 파일안엣 연결되는 중!
+import { addColor, sortColors, rateColor, removeColor } from '../actions'
+// import 구문 중략
+
+/* Wrapper Components */
+
+// AddColorForm 컴포넌트를 포함하고 그것을 리덕스 스토어와 연결해줌
+export const NewColor = (props, { store }) =>
+	<AddColorForm onNewColor={(title, color) => store.dispatch(addColor(title, color))} />
+NewColor.contextTypes = {
+  store: PropTypes.object
+}
+
+export const Menu = (props, { store }) =>
+	<SortMenu sort={store.getState().sort}
+    				onSelect={sortBy => store.dispatch(sortColors(sortBy))} />
+Menu.contextTypes = {
+  store: PropTypes.object
+}
+
+export const Colors = (porps, { store }) => {
+  const { colors, sort } = store.getState()
+  const sortedColors = [...colors].sort(sortFunction(sort))
+  return (
+  	<ColorList colors={sortedColors}
+      				 onRemove={id => sotre.dispatch(removeColor(id))}
+      				 onRate={(id, rating) => store.dispatch(rateColor(id, rating))}
+      />
+  )
+}
+Colors.contextTypes = {
+  store: PropTypes.object
+}
+```
+
+* UI와 데이터를 분리하여 그 사이에 둘을 연결해주는 컨테이너를 두는 아키텍처!
+  * 굳이 이럴 필요 없는 경우 : 프로젝트 규모가 작은 경우, 프로토타이핑인 경우, 개념 증명하는 용도로 쓰는 경우... 넘 당연한디..?
+  * "컨테이너와 표현 컴포넌트를 분리해서 코드 복잡도를 개선할 수 있는 경우에만 그렇게 하라" - 댄 아브라모프 (리덕스 제작자)
+
+## 3. 리액트 리덕스 활용하기
+
+React-redux 를 활용하면 컨텍스트를 통해 스토어를 전달하는 과정의 복잡함을 덜 수 있다.
+
+* 코드의 복잡도가 낮아짐
+* 개발 속도가 빨라짐
+
+### React Redux Provider
+
+### React Redux Connect
 
 
 # 그 외 기타 리덕스 관련 정보들
