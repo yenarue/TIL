@@ -84,6 +84,8 @@ val nonNullableInt: Int = 1			// Java에서 원시타입으로 변환되는 Int
 println(nonNullableInt is Any)	// true
 ```
 
+위 Kotlin 코드는 아래와 같은 Java 코드로 변환된다 
+
 ```java
 Integer nullableInt = 1;
 boolean var = nullableInt instanceof Object;
@@ -227,7 +229,7 @@ val answer: Int = if (timeHasPassed()) {
 ```kotlin
 // fail이 Unit타입이면
 fun fail(message: String) {
-  thrwo IllegalStateException(message)
+  throw IllegalStateException(message)
 }
 
 // answer은 Any 타입이 된다
@@ -260,7 +262,9 @@ Java에는 이러한 개념자체가 존재하지 않기떄문에 이를 표현�
 
 ### 다시한번 살펴보는 Kotlin 타입 계층
 
-기존 타입계층이 각각의 Nullable 타입을 상속하는 구조 (그림자료 첨부필요)
+![](./images/kotlin_type_hierachy_2.png)
+
+기존 타입계층이 각각의 Nullable 타입을 상속하는 구조
 
 다른 것은 다 이해되겠지만 `Nothing?` 타입에 대해서는 조금 모호하게 느껴질 것이다.
 

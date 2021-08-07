@@ -337,7 +337,7 @@ class A {
   }
 }
 
-A.foo()	// 이렇게 nested object에 대한 접근이 간소화 된다. 마치 멤버 메소드인 마냥....
+A.foo()	// 이렇게 nested object에 대한 접근이 간소화 된다. 마치 정적 멤버 메소드인 마냥....
 ```
 
 Java에서는 이와 같은 목적으로 `static` 메소드를 사용한다. (Kotlin 에는 `static` 키워드가 없다)

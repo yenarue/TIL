@@ -577,7 +577,7 @@ Colors.contextTypes = {
 
 ## 3. 리액트 리덕스 활용하기
 
-React-redux 를 활용하면 컨텍스트를 통해 스토어를 전달하는 과정의 복잡함을 덜 수 있다.
+[`react-redux`](https://www.npmjs.com/package/react-redux) 를 활용하면 컨텍스트를 통해 스토어를 전달하는 과정의 복잡함을 덜 수 있다.
 
 * 코드의 복잡도가 낮아짐
 * 개발 속도가 빨라짐
