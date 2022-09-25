@@ -128,10 +128,10 @@ A specification of a **communication** between objects.
   1) Object는 State와 Behavior중 하나를 가진다. => X **둘 다 가져야 함** 
   2) Object의 State는 시간이 지남에 따라 변하지 않는 상태를 의미한다. => X **변할 수 있다**
   3) Object의 State는 정확하게 하나의 Operation에 의해서 표현된다. => X **여러개**
-  4) State 정보가 모두 같더라도 두 Objects는 다른 Objects이다. 
+  4) **State 정보가 모두 같더라도 두 Objects는 다른 Objects이다.** 
 
 - Class에 대한 다음의 설명 중 올바르지 않은 것은?
-  1. Class는 다양한 속성(Properties)을 갖는 a set of Objects을 하나로 묶어주는 Description이다. => X **다양한 속성이 아니라 동일한 속성이다.. -,.-**
+  1. **Class는 다양한 속성(Properties)을 갖는 a set of Objects을 하나로 묶어주는 Description이다.** => X **다양한 속성이 아니라 동일한 속성이다.. -,.-**
   2. Class 는 Object에 대한 Abstract Definition 이다.
   3. Object는 Class의 한 Instance이다. 
   4. Class는 Object을 생성(Creation)하는데 사용하는 일종의 틀(Template)이다. 

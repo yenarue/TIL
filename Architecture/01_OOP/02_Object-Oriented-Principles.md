@@ -98,11 +98,11 @@ Object Composition
 
   "Desgin, produce and describe software so that it can be easily used without knowing the details of how it works."
 
-  => Encapsulation 캡슐화
+  **=> Encapsulation 캡슐화**
 
 - "The ability to hide many different implementation behind a single interface. The same word or phase can mean different things in different context."
 
-  => Polymorphism 다형성
+  **=> Polymorphism 다형성**
 
 
 
