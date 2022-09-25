@@ -148,12 +148,18 @@ Rational Unified Process (RUP) or UP (Unified Process)
 # Quiz
 
 - OOAD (Object-Oriented Analysis and Design) 에 대한 다음의 설명 중 올바르지 않은 것은?
-  1. **Object-Oriented Program을 위한 소프트웨어 개발 방법론 (Methodology) 중 하나 이다.**
+  1. **Object-Oriented Program을 위한 소프트웨어 개발 방법론 (Methodology) 중 하나 이다.** => OOAD는 소프트웨어 개발 프로세스이다. 개발 방법론은 UP같은 것들...
   2. OOA (Object-Oriented Analysis) 는 Domain Concepts/Objects를 찾는 단계이다.
   3. OOD (Object-Oriented Design) 단계에서는 Software Object을 정의한다.
   4. OOD에서는 Objects가 서로 어떻게 Collaboration하는지를 정의한다.
+  
+  > 일반적으로는 네개 다 맞는 말이지만 굳이 디테일하게 들어가자면 정답은 1번
+  
+  
 - UP 기반 OOAD 방법론에 대한 다음의 설명 중 올바르지 않은 것은?
   1. Iterative, Incremental 및 Evolutionary한 소프트웨어 개발 방법론이다.
   2. Risk-driven 하고 Architecture-centric한 개발 방법론이다.
   3. **Client 보다는 Architecture 관점에서 발생할 수 있는 Risk를 줄이는 것을 중요 하게 생각한다.**
   4. 모든 단계에서 Use Cases가 중요하게 사용된다.
+  
+  > 모든 단계 : OOA, OOD, OOI
