@@ -97,3 +97,11 @@ Use Case Diagram
   2. Use-Case는 UP의 모든 Iteration에서 항상 Fully-Dressed 포맷으로 작성하는 것이 바람직하다. => Iteration마다 3가지 수준으로...
   3. Use-Case는 시스템이 구체적으로 어떻게 동작할 지에 대해서까지 자세히 작성할수록 좋다. => 구체적이면 안됨. 블랙박스여야 함.
   4. Use-Case는 UP Construction Phase까지 지속적으로 Refinement해야 한다. => Construction 단계에서부터는 유즈케이스가 수정되면 안됨.
+
+
+
+------
+
+# 참고자료
+
+- plantUML : https://plantuml.com/ko/use-case-diagram
