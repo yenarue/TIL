@@ -1,0 +1,34 @@
+@startuml homework2
+skinparam classAttributeIconSize 0
+
+class Instructor {
+    + name: String
+    + startLesson()
+}
+
+class Course {
+    + subject: String
+    + getInstructorName()
+}
+
+Class TimeTable {
+    - slots: List<Slot>
+}
+
+class Slot {
+    + day
+    + hour
+    + room : Room
+    + getCourse(String name)
+}
+
+class Room {
+    + id
+}
+
+Slot "1" --o "1" Room
+Slot "1" --o "1" Course
+Slot "0..*" --* "1" TimeTable
+Instructor "1" o-- "0..*" Course
+
+@enduml

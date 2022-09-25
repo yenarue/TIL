@@ -87,13 +87,13 @@ Use Case Diagram
 - Use-Case에 대한 다음의 설명 중 올바르지 않은 것은?
   1. Use-Case는 외부 Actors가 개발할 시스템을 어떻게 사용하는지를 묘사한 Text Story 이다.
   2. Use-Case Diagram은 시스템의 Boundary (System Context) 를 표시할 수 있다.
-  3. **Use-Case는 일반적으로 Use-Case Diagram을 의미하며, Diagram을 그리는 것이 가장 중요하다.**
-  4. Use-Case는 UP의 각 Phase와 Iteration에 따라 다양한 수준으로 개발된다.
+  3. **Use-Case는 일반적으로 Use-Case Diagram을 의미하며, Diagram을 그리는 것이 가장 중요하다.** => Use-case 가 가장 중요하다.
+  4. Use-Case는 UP의 각 Phase와 Iteration에 따라 다양한 수준으로 개발된다. => 3가지 수준(brief -> casual -> fully dressed)으로 개발됨
 
 
 
 - Use-Case에 대한 다음의 설명 중 올바른 것은?
   1. **Use-Case는 가능하면 개발 범위 밖에 있는 UI, HW 등에 Independent하게 작성하는 것이  좋다.**
-  2. Use-Case는 UP의 모든 Iteration에서 항상 Fully-Dressed 포맷으로 작성하는 것이 바람직하다.
-  3. Use-Case는 시스템이 구체적으로 어떻게 동작할 지에 대해서까지 자세히 작성할수록 좋다.
-  4. Use-Case는 UP Construction Phase까지 지속적으로 Refinement해야 한다
+  2. Use-Case는 UP의 모든 Iteration에서 항상 Fully-Dressed 포맷으로 작성하는 것이 바람직하다. => Iteration마다 3가지 수준으로...
+  3. Use-Case는 시스템이 구체적으로 어떻게 동작할 지에 대해서까지 자세히 작성할수록 좋다. => 구체적이면 안됨. 블랙박스여야 함.
+  4. Use-Case는 UP Construction Phase까지 지속적으로 Refinement해야 한다. => Construction 단계에서부터는 유즈케이스가 수정되면 안됨.

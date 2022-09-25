@@ -1,26 +1,45 @@
 @startuml digital_clock
+left to right direction
+
+package Mobile {
+    "이동경로 추적 기능 실행" as (UC_05)
+    "시계위치 찾기 요청" as (UC_03_01)
+    "시계 정보 등록" as (Precondition_01)
+    "시계 정보 요청" as (Precondition_01_01)
+}
+
+package Watch {
+    "미세먼지 정보확인" as (UC_01)
+    "심박수 정보확인" as (UC_02)
+    "알람 실행" as (UC_03)
+    "자가 업데이트 수행" as (UC_04)
+    "이동경로 정보 전달" as (UC_05_02)
+    "시계 정보 전달" as (Precondition_01_02)
+}
+
+package Server {
+    "미세먼지 정보 전달" as (UC_01_01)
+    "업데이트 정보 전달" as (UC_04_01)
+}
+
+
+:User: --> (Precondition_01)
+(Precondition_01) .> (Precondition_01_01) : include
+(Precondition_01_01) -- (Precondition_01_02)
 
 :User: --> (UC_01)
-:Watch: -- (UC_01)
+(UC_01) -- (UC_01_01)
 
 :User: --> (UC_02)
-:Watch: -- (UC_02)
 
-:Mobile App: --> (UC_03)
-:Watch: -- (UC_03)
+(UC_03_01) .> (Precondition_01) : include
+:User: --> (UC_03_01)
+(UC_03_01) -- (UC_03)
 
-:Watch: --> (UC_04)
-:Server: -- (UC_04)
+(UC_04) -- (UC_04_01)
 
+(UC_05) .> (Precondition_01) : include
 :User: --> (UC_05)
-:Mobile App: -- (UC_05)
-:Watch: -- (UC_05)
-
-
-"미세먼지 정보확인" as (UC_01)
-"심박수 정보확인" as (UC_02)
-"시계위치 알람 실행" as (UC_03)
-"자가 업데이트 수행" as (UC_04)
-"이동경로 추적 기능" as (UC_05)
+(UC_05) -- (UC_05_02)
 
 @enduml

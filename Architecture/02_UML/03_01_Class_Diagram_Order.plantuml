@@ -1,0 +1,22 @@
+@startuml homework1
+skinparam classAttributeIconSize 0
+
+abstract class Customer {
+    + type: String
+    + order(item: Item)
+}
+
+class ExternalCustomer {
+
+}
+
+class InternalCustomer {
+
+}
+
+Customer ..> Item
+ExternalCustomer --|> Customer
+InternalCustomer --|> Customer
+
+
+@enduml

@@ -1,0 +1,30 @@
+@startuml homework2
+skinparam classAttributeIconSize 0
+
+class FlightReservationSystem {
+    - fligts: List<Flight>
+    + searchFlight(id: String): Flight
+    + purchaseTicket(id: Flight, customerId: String): String
+    + getAvailableSeats(id: Flight): List<Int>
+    + selectSeat(seatNumber: Int, customerId: String): Void
+}
+
+class Flight {
+    - id: String
+}
+
+class Customer {
+    + id
+    + reserve()
+    + pay()
+}
+
+class Bank {
+    + withdraw()
+}
+
+Flight "0..*" --o "1" FlightReservationSystem
+Customer "1" -- "1" FlightReservationSystem
+Customer "0..*" -- "1..*" Bank
+
+@enduml
