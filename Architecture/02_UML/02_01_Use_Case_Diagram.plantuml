@@ -1,0 +1,26 @@
+@startuml digital_clock
+
+:User: --> (UC_01)
+:Watch: -- (UC_01)
+
+:User: --> (UC_02)
+:Watch: -- (UC_02)
+
+:Mobile App: --> (UC_03)
+:Watch: -- (UC_03)
+
+:Watch: --> (UC_04)
+:Server: -- (UC_04)
+
+:User: --> (UC_05)
+:Mobile App: -- (UC_05)
+:Watch: -- (UC_05)
+
+
+"미세먼지 정보확인" as (UC_01)
+"심박수 정보확인" as (UC_02)
+"시계위치 알람 실행" as (UC_03)
+"자가 업데이트 수행" as (UC_04)
+"이동경로 추적 기능" as (UC_05)
+
+@enduml
