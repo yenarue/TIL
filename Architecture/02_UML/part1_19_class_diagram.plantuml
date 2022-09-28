@@ -1,0 +1,36 @@
+@startuml part1_19
+left to right direction
+skinparam classAttributeIconSize 0
+
+class Student {
+    + studentNumber: Int
+    + name: String
+    + email: String
+}
+
+class Course {
+    + name: String
+    + id: Int
+    + hours: float
+}
+
+class Project {
+    + name: String
+    + start: Date
+    + end: Date
+}
+
+class Enrollment {
+    + drop()
+    + cancel()
+}
+
+class StudentParticipation {
+}
+
+Student "10..*" -- "1..7" Course : enroll >
+(Student, Course) . Enrollment
+Student "2..5" -- "0..5" Project
+(Student, Project) . StudentParticipation
+
+@enduml

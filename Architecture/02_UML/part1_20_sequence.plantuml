@@ -1,0 +1,24 @@
+@startuml part1_20
+' left to right direction
+' skinparam classAttributeIconSize 0
+
+participant ":Student" as Student order 10
+participant ":StudentAdminSystem" as SAS order 20
+participant ":DB" as DB order 30
+
+loop incorrect password
+    Student -> SAS: login(name, pw)
+    SAS -> DB : check(name, pw)
+    alt number of trying to login >= 3
+        SAS -> Student: warning message
+    end
+end
+
+break incorrect password
+    SAS -> Student: error message
+end
+
+Student -> SAS : register(matNo, exam)
+SAS -> DB : enter(matNo, exam)
+
+@enduml

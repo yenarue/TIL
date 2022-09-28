@@ -155,7 +155,6 @@ Rational Unified Process (RUP) or UP (Unified Process)
   
   > 일반적으로는 네개 다 맞는 말이지만 굳이 디테일하게 들어가자면 정답은 1번
   
-  
 - UP 기반 OOAD 방법론에 대한 다음의 설명 중 올바르지 않은 것은?
   1. Iterative, Incremental 및 Evolutionary한 소프트웨어 개발 방법론이다.
   2. Risk-driven 하고 Architecture-centric한 개발 방법론이다.
