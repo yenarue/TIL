@@ -62,7 +62,7 @@ A program is organized with **objects**.
 OOA + OOD
 
 - OOA (Object-Oriented Analysis) - 객체를 찾는다 
-  - Domain 컨셉을 탐색하고 객체를 정의 (the objects of the problem domain)
+  - Domain 컨셉을 탐색하고 객체를 정의 (the a of the problem domain)
     - **Domain Model**
   - 요구사항을 명확히 분석
     - **Use Case Model**
